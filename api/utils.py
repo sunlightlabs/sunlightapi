@@ -2,7 +2,7 @@ from django.core.exceptions import MultipleObjectsReturned, FieldError
 from django.utils import simplejson
 from django.http import HttpResponse
 from api.models import Source
-from apilog.models import LogEntry
+from logging.models import LogEntry
 
 class APIError(Exception):
     def __init__(self, code, message):
@@ -55,7 +55,16 @@ def apimethod(method_name):
 
             response = {'response': obj}
 
-            # return obj in correct format (xml or json)
+            # log this call to the database
+            LogEntry.objects.create(method = method_name,
+                                    error = obj.has_key('error'),
+                                    output = output,
+                                    caller_ip = request.META['REMOTE_ADDR'],
+                                    caller_host = request.META['REMOTE_HOST'],
+                                    is_ajax = request.is_ajax(),
+                                    query_string = request.META['QUERY_STRING'])
+
+            # return obj in correct format (xml or json)'
             if output == 'xml':
                 response = dict_to_xml(response)
                 mimetype = 'application/xml'

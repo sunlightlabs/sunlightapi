@@ -1,0 +1,31 @@
+
+<div class="stats">
+    <h2>Methods</h2>
+    <table>
+        <tr><th>Method</th><th>Calls</th></tr>
+        {% for m in methods %}
+            <tr><td>{{m.0}}</td><td>{{m.1}}</td></tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="stats">
+    <h2>Monthly View</h2>
+    <table>
+        <tr><th>Month</th><th>Calls</th></tr>
+        {% for m in months %}
+            <tr><td>{{m.0}}</td><td>{{m.1}}</td></tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+<div class="stats">
+    <h2>Output Formats</h2>
+    <table>
+        <tr><th>Format</th><th>Calls</th></tr>
+        {% for f in outputs %}
+            <tr><td>{{f.0}}</td><td>{{f.1}}</td></tr>
+        {% endfor %}
+    </table>
+</div>
