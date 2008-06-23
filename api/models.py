@@ -34,18 +34,21 @@ class Legislator(models.Model):
     gender = models.CharField(max_length=1, choices=GENDERS)
 
     # other site ids
-    sunlight_old_id = models.CharField(max_length=20)
+    sunlight_old_id = models.CharField(max_length=20, blank=True)
     votesmart_id = models.CharField(max_length=20)
     fec_id = models.CharField(max_length=20)
     crp_id = models.CharField(max_length=20)
-    bioguide_id = models.CharField(max_length=20)
+    bioguide_id = models.CharField(max_length=20, primary_key=True)
     govtrack_id = models.CharField(max_length=20)
-    eventful_id = models.CharField(max_length=20)
+    eventful_id = models.CharField(max_length=20, blank=True)
     congresspedia_url = models.URLField()
 
     def __unicode__(self):
         return '%s %s (%s-%s)' % (self.get_title_display(), self.lastname,
                                   self.party, self.state)
+
+    class Meta:
+        ordering = ('lastname', 'firstname')
 
     class Admin:
         pass
