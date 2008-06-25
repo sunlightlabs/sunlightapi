@@ -8,6 +8,6 @@ class LogEntry(models.Model):
     output = models.CharField(max_length=4)
 
     caller_ip = models.IPAddressField()
-    caller_host = models.CharField(max_length=100)
+    caller_host = models.CharField(max_length=100,null=True)
     is_ajax = models.BooleanField()
     query_string = models.CharField(max_length=200)
