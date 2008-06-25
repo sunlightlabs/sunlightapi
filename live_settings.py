@@ -1,7 +1,12 @@
-# Django settings for newapi project.
+# Django settings for sunlight_api deployed
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+if DEBUG:
+    CACHE_BACKEND = 'dummy:///'
+else:
+    CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 
 ADMINS = (
     ('James Turk', 'james.p.turk@gmail.com'),
@@ -9,12 +14,20 @@ ADMINS = (
 MANAGERS = ADMINS
 EMAIL_SUBJECT_PREFIX = '[Sunlight API]'
 
-DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = 'apidata.sqlite3'
-DATABASE_USER = ''
-DATABASE_PASSWORD = ''
-DATABASE_HOST = ''
+DATABASE_ENGINE = 'mysql'
+DATABASE_NAME = 'sunlightapi'
+DATABASE_USER = 'sunlightapi'
+DATABASE_PASSWORD = '***REMOVED***'
+DATABASE_HOST = 'services.sunlightlabs.com'
 DATABASE_PORT = ''
+
+EMAIL_HOST = 'mail.sunlightfoundation.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'bounce@sunlightfoundation.com'
+EMAIL_HOST_PASSWORD = 'b0unc3'
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL=EMAIL_HOST_USER
+
 
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
@@ -67,5 +80,5 @@ INSTALLED_APPS = (
     'django.contrib.databrowse',
     'django.contrib.flatpages',
     'sunlightapi.api',
-    'sunlightapi.logs',
+    'sunlightapi.logging',
 )

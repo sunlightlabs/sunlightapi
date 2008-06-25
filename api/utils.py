@@ -2,7 +2,7 @@ from django.core.exceptions import MultipleObjectsReturned, FieldError
 from django.utils import simplejson
 from django.http import HttpResponse
 from sunlightapi.api.models import Source
-from sunlightapi.logging.models import LogEntry
+from sunlightapi.logs.models import LogEntry
 
 """ Utilities for creating API Methods """
 
