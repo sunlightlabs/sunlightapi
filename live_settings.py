@@ -80,5 +80,5 @@ INSTALLED_APPS = (
     'django.contrib.databrowse',
     'django.contrib.flatpages',
     'sunlightapi.api',
-    'sunlightapi.logging',
+    'sunlightapi.logs',
 )
