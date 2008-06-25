@@ -1,5 +1,5 @@
-from api.models import Legislator, ZipDistrict
-from api.utils import apimethod, APIError
+from sunlightapi.api.models import Legislator, ZipDistrict
+from sunlightapi.api.utils import apimethod, APIError
 from polipoly import AddressToDistrictService
 
 @apimethod('legislators.get')

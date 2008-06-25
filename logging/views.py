@@ -1,4 +1,4 @@
-from logging.models import LogEntry
+from sunlightapi.logging.models import LogEntry
 from django.shortcuts import render_to_response
 
 

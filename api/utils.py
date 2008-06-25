@@ -1,15 +1,28 @@
 from django.core.exceptions import MultipleObjectsReturned, FieldError
 from django.utils import simplejson
 from django.http import HttpResponse
-from api.models import Source
-from logging.models import LogEntry
+from sunlightapi.api.models import Source
+from sunlightapi.logging.models import LogEntry
+
+""" Utilities for creating API Methods """
 
 class APIError(Exception):
     def __init__(self, code, message):
         self.message = message
         self.code = code
 
+
 def dict_to_xml(d):
+    """ Convert a python dictionary to a simple XML representation
+
+        Dictionary keys create begin/end tags, lists are shown appended together
+        and other items are output as they were:
+
+        >>> dict_to_xml({'html':{'ul':[{'li':'uno'}, {'li':'dos'},
+                         {'li':'tres'}]}})
+        '<html><ul><li>uno</li><li>dos</li><li>tres</li></ul></html>'
+    """
+
     if type(d) == dict:
         return ''.join(['<%s>%s</%s>' % (k,dict_to_xml(v),k)
                         for k,v in d.iteritems()])
@@ -17,6 +30,7 @@ def dict_to_xml(d):
         return ''.join([dict_to_xml(i) for i in d])
     else:
         return d
+
 
 def apimethod(method_name):
     """ Decorator to do the repeat work of all api methods.
@@ -38,14 +52,18 @@ def apimethod(method_name):
             try:
                 obj = func(params, *args, **kwargs)
             except KeyError, e:
-                obj = {'error': {'code': 101, 'message':'Missing Parameter: %s' % e}}
+                obj = {'error': {'code': 101,
+                                 'message':'Missing Parameter: %s' % e}}
             except FieldError, e:
-                obj = {'error': {'code': 102, 'message':'Invalid Parameter'}}
+                obj = {'error': {'code': 102,
+                                 'message':'Invalid Parameter'}}
             except MultipleObjectsReturned, e:
-                obj = {'error': {'code': 103, 'message':'Multiple Objects Returned'}}
+                obj = {'error': {'code': 103,
+                                 'message':'Multiple Objects Returned'}}
             except APIError, e:
                 obj = {'error': {'code': e.code, 'message':e.message}}
 
+            # only append metadata if requested & return value not an error
             if metadata and not obj.has_key('error'):
                 sources = []
                 for s in Source.objects.filter(source_for__name=method_name):

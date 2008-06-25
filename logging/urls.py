@@ -1,6 +1,6 @@
 from django.views.generic.list_detail import object_list
 from django.conf.urls.defaults import *
-from logging.models import LogEntry
+from sunlightapi.logging.models import LogEntry
 
 urlpatterns = patterns('',
     url(r'^raw/(?P<page>\d+)/$', object_list,
