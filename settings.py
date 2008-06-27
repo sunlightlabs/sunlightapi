@@ -55,7 +55,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
-
+    '/home/james/sunlight/sunlightapi/templates/',
 )
 
 INSTALLED_APPS = (

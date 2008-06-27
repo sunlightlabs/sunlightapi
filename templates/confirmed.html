@@ -1,0 +1,13 @@
+
+<h1>{{message}}</h1>
+
+{% if error %}
+    <h1>Error Activating Key</h1>
+    Could not activate key: <em>{{error}}</em>.
+{% else %}
+    <h1>Key Successfully Activated!</h1>
+
+    Your API key has been successfully activated. You may want to refer to the
+    <a href="/api/docs/">API Documentation</a> or review our
+    <a href="/api/tos/">Terms of Service</a>.
+{% endif %}

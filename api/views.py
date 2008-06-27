@@ -53,7 +53,7 @@ def district_from_latlong(params):
     lat, lng, districts = service.lat_long_to_district(lat, lng)
 
     if len(districts) == 0:
-        raise APIError(104, 'Point not within a congressional district.')
+        raise APIError('Point not within a congressional district.')
 
     objs = [{'district': {'state': d[0], 'number': d[1]}} for d in districts]
     obj = {'districts': objs}

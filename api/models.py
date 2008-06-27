@@ -69,7 +69,7 @@ databrowse.site.register(Legislator)
 
 class ZipDistrict(models.Model):
     """ zip5 to district mapping """
-    
+
     zip = models.CharField(max_length=5)
     state = models.CharField(max_length=2)
     district = models.CharField(max_length=10)
@@ -77,7 +77,7 @@ class ZipDistrict(models.Model):
 class Method(models.Model):
     """ API Methods - used in sourcing """
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, primary_key=True)
 
     def __unicode__(self):
         return self.name
@@ -88,7 +88,7 @@ class Method(models.Model):
 class Source(models.Model):
     """ Sourcing information for API methods """
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, primary_key=True)
     url = models.URLField()
     last_update = models.DateField()
     source_for = models.ManyToManyField(Method)

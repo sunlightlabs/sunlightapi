@@ -1,15 +1,14 @@
 from django.core.exceptions import MultipleObjectsReturned, FieldError
 from django.utils import simplejson
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from sunlightapi.api.models import Source
-from sunlightapi.logs.models import LogEntry
+from sunlightapi.logs.models import LogEntry, ApiUser
 
 """ Utilities for creating API Methods """
 
 class APIError(Exception):
-    def __init__(self, code, message):
+    def __init__(self, message):
         self.message = message
-        self.code = code
 
 
 def dict_to_xml(d):
@@ -44,52 +43,59 @@ def apimethod(method_name):
             params = {}
             output = request.GET.get('output', 'json')
             metadata = request.GET.get('metadata', None)
+            apikey = request.GET.get('apikey', None)
             for key,val in request.GET.iteritems():
-                if key not in ('output', 'metadata'):
+                if key not in ('output', 'metadata', 'apikey'):
                     params[str(key)] = val[0]
 
             # call the actual api function
+            error = None
             try:
-                obj = func(params, *args, **kwargs)
+                if ApiUser.objects.filter(api_key=apikey, status='A').count():
+                    obj = func(params, *args, **kwargs)
+                else:
+                    return HttpResponseForbidden('Invalid API Key')
             except KeyError, e:
-                obj = {'error': {'code': 101,
-                                 'message':'Missing Parameter: %s' % e}}
+                error = 'Missing Parameter: %s' % e
             except FieldError, e:
-                obj = {'error': {'code': 102,
-                                 'message':'Invalid Parameter'}}
+                error = 'Invalid Parameter'
             except MultipleObjectsReturned, e:
-                obj = {'error': {'code': 103,
-                                 'message':'Multiple Objects Returned'}}
+                error = 'Multiple Legislators Returned'
             except APIError, e:
-                obj = {'error': {'code': e.code, 'message':e.message}}
+                error = e.message
 
-            # only append metadata if requested & return value not an error
-            if metadata and not obj.has_key('error'):
+            # log this call to the database
+            LogEntry.objects.create(method = method_name,
+                                    error = bool(error),
+                                    output = output,
+                                    caller_key = apikey,
+                                    caller_ip = request.META['REMOTE_ADDR'],
+                                    caller_host = request.META['REMOTE_HOST'],
+                                    is_ajax = request.is_ajax(),
+                                    query_string = request.META['QUERY_STRING'])
+
+            # only append metadata if requested & not
+            if metadata and not error:
                 sources = []
                 for s in Source.objects.filter(source_for__name=method_name):
                     sources.append({'source':{'name':s.name, 'url':s.url,
                                     'updated':str(s.last_update)}})
                 obj['sources'] = sources
 
-            response = {'response': obj}
+            if not error:
+                response = {'response': obj}
 
-            # log this call to the database
-            LogEntry.objects.create(method = method_name,
-                                    error = obj.has_key('error'),
-                                    output = output,
-                                    caller_ip = request.META['REMOTE_ADDR'],
-                                    caller_host = request.META['REMOTE_HOST'],
-                                    is_ajax = request.is_ajax(),
-                                    query_string = request.META['QUERY_STRING'])
+                # return obj in correct format (xml or json)'
+                if output == 'xml':
+                    response = dict_to_xml(response)
+                    mimetype = 'application/xml'
+                else:
+                    response = simplejson.dumps(response)
+                    mimetype = 'application/json'
 
-            # return obj in correct format (xml or json)'
-            if output == 'xml':
-                response = dict_to_xml(response)
-                mimetype = 'application/xml'
+                return HttpResponse(response, mimetype)
             else:
-                response = simplejson.dumps(response)
-                mimetype = 'application/json'
-            return HttpResponse(response, mimetype)
+                return HttpResponseBadRequest(error)
 
         # preserve signature
         newfunc.__name__ = func.__name__
