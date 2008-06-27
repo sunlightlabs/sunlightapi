@@ -1,4 +1,4 @@
-from django.core.exceptions import MultipleObjectsReturned, FieldError
+from django.core.exceptions import MultipleObjectsReturned, FieldError, ObjectDoesNotExist
 from django.utils import simplejson
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from sunlightapi.api.models import Source
@@ -48,13 +48,16 @@ def apimethod(method_name):
                 if key not in ('output', 'metadata', 'apikey'):
                     params[str(key)] = val[0]
 
+            # do authorization
+            try:
+                apiuser = ApiUser.objects.get(api_key=apikey, status='A')
+            except ObjectDoesNotExist:
+                return HttpResponseForbidden('Invalid API Key')
+
             # call the actual api function
             error = None
             try:
-                if ApiUser.objects.filter(api_key=apikey, status='A').count():
-                    obj = func(params, *args, **kwargs)
-                else:
-                    return HttpResponseForbidden('Invalid API Key')
+                obj = func(params, *args, **kwargs)
             except KeyError, e:
                 error = 'Missing Parameter: %s' % e
             except FieldError, e:
@@ -68,7 +71,7 @@ def apimethod(method_name):
             LogEntry.objects.create(method = method_name,
                                     error = bool(error),
                                     output = output,
-                                    caller_key = apikey,
+                                    caller_key = apiuser,
                                     caller_ip = request.META['REMOTE_ADDR'],
                                     caller_host = request.META['REMOTE_HOST'],
                                     is_ajax = request.is_ajax(),
