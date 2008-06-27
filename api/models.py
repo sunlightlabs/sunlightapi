@@ -29,7 +29,7 @@ class Legislator(models.Model):
     # job
     title = models.CharField(max_length=3, choices=TITLES)
     state = models.CharField(max_length=2)
-    district = models.CharField(max_length=10, blank=True)
+    district = models.CharField(max_length=12, blank=True)
     party = models.CharField(max_length=1, choices=PARTIES)
 
     # contact info
