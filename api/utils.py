@@ -35,17 +35,19 @@ def apimethod(method_name):
     """ Decorator to do the repeat work of all api methods.
 
         Turns request.GET into params and converts return value of func from
-        a python object to JSON or XML according to output parameter.
+        a python object to JSON or XML according to format parameter.
     """
     def decorator(func):
         def newfunc(request, *args, **kwargs):
+
+            format = kwargs.pop('format')
+
             # preprocess params from request.GET
             params = {}
-            output = request.GET.get('output', 'json')
             metadata = request.GET.get('metadata', None)
             apikey = request.GET.get('apikey', None)
             for key,val in request.GET.iteritems():
-                if key not in ('output', 'metadata', 'apikey'):
+                if key not in ('metadata', 'apikey'):
                     params[str(key)] = val[0]
 
             # do authorization
@@ -70,7 +72,7 @@ def apimethod(method_name):
             # log this call to the database
             LogEntry.objects.create(method = method_name,
                                     error = bool(error),
-                                    output = output,
+                                    output = format,
                                     caller_key = apiuser,
                                     caller_ip = request.META['REMOTE_ADDR'],
                                     caller_host = request.META['REMOTE_HOST'],
@@ -89,7 +91,7 @@ def apimethod(method_name):
                 response = {'response': obj}
 
                 # return obj in correct format (xml or json)'
-                if output == 'xml':
+                if format == '.xml':
                     response = dict_to_xml(response)
                     mimetype = 'application/xml'
                 else:
