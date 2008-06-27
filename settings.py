@@ -1,7 +1,11 @@
-# Django settings for newapi project.
+# Django settings for sunlight_api development
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+if DEBUG:
+    CACHE_BACKEND = 'dummy:///'
+else:
+    CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 
 ADMINS = (
     ('James Turk', 'james.p.turk@gmail.com'),
@@ -15,6 +19,13 @@ DATABASE_USER = ''
 DATABASE_PASSWORD = ''
 DATABASE_HOST = ''
 DATABASE_PORT = ''
+
+EMAIL_HOST = 'mail.sunlightfoundation.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'bounce@sunlightfoundation.com'
+EMAIL_HOST_PASSWORD = 'b0unc3'
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL=EMAIL_HOST_USER
 
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
@@ -52,7 +63,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'sunlightapi.urls'
 
 TEMPLATE_DIRS = (
     '/home/james/sunlight/sunlightapi/templates/',
