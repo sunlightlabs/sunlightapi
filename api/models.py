@@ -64,8 +64,8 @@ class Legislator(models.Model):
         pass
 
 # show Legislator in databrowse app
-from django.contrib import databrowse
-databrowse.site.register(Legislator)
+#from django.contrib import databrowse
+#databrowse.site.register(Legislator)
 
 class ZipDistrict(models.Model):
     """ zip5 to district mapping """

@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 
-#\.?(?P<format>(xml|json)?)
+#(?P<format>(\.(xml|json))?)
 
 urlpatterns = patterns('sunlightapi.api.views',
     url(r'^legislators.get(?P<format>(\.(xml|json))?)$', 'legislators_get'),
