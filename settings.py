@@ -11,7 +11,7 @@ ADMINS = (
     ('James Turk', 'james.p.turk@gmail.com'),
 )
 MANAGERS = ADMINS
-EMAIL_SUBJECT_PREFIX = '[Sunlight API]'
+EMAIL_SUBJECT_PREFIX = '[Sunlight API] '
 
 DATABASE_ENGINE = 'sqlite3'
 DATABASE_NAME = 'apidata.sqlite3'
@@ -79,4 +79,5 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'api',
     'sunlightapi.logs',
+    'django-sunlightcore'
 )
