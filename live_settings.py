@@ -79,4 +79,5 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'sunlightapi.api',
     'sunlightapi.logs',
+    'django-sunlightcore',
 )
