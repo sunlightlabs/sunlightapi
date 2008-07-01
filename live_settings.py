@@ -1,6 +1,6 @@
 # Django settings for sunlight_api deployed
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 if DEBUG:
     CACHE_BACKEND = 'dummy:///'
@@ -8,10 +8,10 @@ else:
     CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 
 ADMINS = (
-    ('James Turk', 'james.p.turk@gmail.com'),
+    ('James Turk', 'jturk@sunlightfoundation.com'),
 )
 MANAGERS = ADMINS
-EMAIL_SUBJECT_PREFIX = '[Sunlight API]'
+EMAIL_SUBJECT_PREFIX = '[Sunlight API] '
 
 DATABASE_ENGINE = 'mysql'
 DATABASE_NAME = 'sunlightapi'

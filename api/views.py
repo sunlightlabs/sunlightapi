@@ -49,7 +49,7 @@ def district_from_latlong(params):
     lat = params['latitude']
     lng = params['longitude']
 
-    service = AddressToDistrictService('congdist/cd99_110')
+    service = AddressToDistrictService('/var/www/django/sunlightapi/congdist/cd99_110')
     lat, lng, districts = service.lat_long_to_district(lat, lng)
 
     if len(districts) == 0:
