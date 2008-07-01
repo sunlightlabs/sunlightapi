@@ -14,7 +14,7 @@ def register(request):
             message = '''Thank you for registering for a Sunlight Labs API Key.
 
 Please visit the following URL to verify your email address and activate your key
-http://services.sunlightlabs.com/api/apikey/confirm/%s/
+http://services.sunlightlabs.com/api/confirmkey/%s/
 
 Your details are included below for your records:
     Email: %s

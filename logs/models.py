@@ -1,5 +1,6 @@
 from django.db import models
 from django.newforms import ModelForm
+from django.newforms.util import ValidationError
 
 KEY_STATUS = (
     ('U', 'Unactivated'),
@@ -11,10 +12,10 @@ class ApiUser(models.Model):
 
     api_key = models.CharField(max_length=32, primary_key=True)
 
-    email = models.EmailField(unique=True)
-    org_name = models.CharField(max_length=100, blank=True)
-    org_url = models.URLField(blank=True)
-    usage = models.TextField(blank=True)
+    email = models.EmailField('Email Address', unique=True)
+    org_name = models.CharField('Organization Name', max_length=100, blank=True)
+    org_url = models.URLField('Organization URL', blank=True)
+    usage = models.TextField('Intended Usage', blank=True)
 
     signup_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=1, choices=KEY_STATUS, default='U')
@@ -32,6 +33,11 @@ class ApiUserForm(ModelForm):
     class Meta:
         model = ApiUser
         exclude = ('api_key', 'signup_time', 'status')
+
+    def clean_email(self):
+        if ApiUser.objects.filter(email=self.cleaned_data['email']).count():
+            raise ValidationError('Email address already registered')
+        return self.cleaned_data['email']
 
 class LogEntry(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)

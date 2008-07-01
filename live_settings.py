@@ -20,11 +20,11 @@ DATABASE_PASSWORD = '***REMOVED***'
 DATABASE_HOST = 'services.sunlightlabs.com'
 DATABASE_PORT = ''
 
-EMAIL_HOST = 'mail.sunlightfoundation.com'
-EMAIL_PORT = 25
-EMAIL_HOST_USER = 'bounce@sunlightfoundation.com'
-EMAIL_HOST_PASSWORD = 'b0unc3'
-EMAIL_USE_TLS = False
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'api@sunlightlabs.com'
+EMAIL_HOST_PASSWORD = '***REMOVED***'
+EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL=EMAIL_HOST_USER
 
 TIME_ZONE = 'America/New_York'
