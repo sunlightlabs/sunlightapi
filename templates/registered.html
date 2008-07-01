@@ -1,5 +1,7 @@
-
-<h1>Registration Successful</h1>
+{% extends "base.html" %}
+{% block title %}Sunlight Labs API Registration Successful!{% endblock title %}
+{% block content %}
+<h1>Sunlight Labs API Registration Successful</h1>
 
 <dl>
     <dt>Email:</dt><dd>{{user.email}}</dd>
@@ -9,6 +11,7 @@
     <dt>Signup Time:</dt><dd>{{user.signup_time}}</dd>
 </dl>
 
-Thanks for signing up for the Sunlight Labs API, check your email in the next
+<p>Thanks for signing up for the Sunlight Labs API, check your email in the next
 few minutes for your API key, keep in mind that before using the API you must
-click the link provided in the email to activate your new key.
+click the link provided in the email to activate your new key.</p>
+{% endblock content %}

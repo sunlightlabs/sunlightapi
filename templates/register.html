@@ -1,7 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Sunlight Labs API Registration{% endblock title %}
+{% block content %}
 
-Please fill out the form below and an API key will be emailed to you.
+<h1>Sunlight Labs API Registration</h1>
+
+<p>Please fill out the form below and an API key will be emailed to you.</p>
 
 <form method="post" action="">
 <table>{{ form }}</table>
-<input type="submit" />
+<input type="submit" value="I Agree to the API Terms of Service" />
 </form>
+
+<h2>Sunlight Labs API Terms of Service</h2>
+Use of the Sunlight Labs API is subject to the following terms:
+
+<ul>
+<li>The Sunlight Foundation/Sunlight Labs can not be held liable for the accuracy or availability of the service provided and do not make any claims to accuracy, completeness, availability, or any other warranty or guarantee.</li>
+<li>When using the Sunlight Labs API, attribution is appreciated but not required.  Implication or claim of endorsement is strictly prohibited.</li>
+<li>Usage of the API depends upon an API key which should only be used by the individual/organization which requested it.  Sharing or distribution of API keys is not permitted.</li>
+<li>Usage is currently not limited, but excessive usage is monitored and may be grounds for the termination of service.  If you plan to make heavy use of the Sunlight Labs API please contact us beforehand so we can be sure.</li>
+<li>Sunlight Labs does not distribute specifics of API usage except in cases where we have obtained your permission, we do however reserve the right to track and publish aggregate statistics on usage.</li>
+<li>These terms may be modified at any time, users will be notified of any changes via the email address on file.</li>
+<li>Service may be terminated at any time at the discretion of Sunlight Labs.</li>
+</ul>
+
+
+{% endblock content %}

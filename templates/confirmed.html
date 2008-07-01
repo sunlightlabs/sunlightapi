@@ -1,5 +1,6 @@
-
-<h1>{{message}}</h1>
+{% extends "base.html" %}
+{% block title %}Sunlight Labs API Key Confirmation{% endblock title %}
+{% block content %}
 
 {% if error %}
     <h1>Error Activating Key</h1>
@@ -11,3 +12,4 @@
     <a href="/api/docs/">API Documentation</a> or review our
     <a href="/api/tos/">Terms of Service</a>.
 {% endif %}
+{% endblock content %}
