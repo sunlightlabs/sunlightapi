@@ -42,7 +42,7 @@ def apimethod(method_name):
 
             format = kwargs.pop('format')
             if format:
-                format = format[:-1]
+                format = format[1:]
 
             # preprocess params from request.GET
             params = {}

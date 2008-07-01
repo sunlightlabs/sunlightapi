@@ -38,7 +38,7 @@ def zips_from_district(params):
     zds = ZipDistrict.objects.filter(state=params['state'],
                                      district=params['district'])
 
-    objs = [{'zip': zd.zip} for zd in zds]
+    objs = [zd.zip for zd in zds]
     obj = {'zips': objs}
 
     return obj
