@@ -41,6 +41,8 @@ def apimethod(method_name):
         def newfunc(request, *args, **kwargs):
 
             format = kwargs.pop('format')
+            if format:
+                format = format[:-1]
 
             # preprocess params from request.GET
             params = {}
@@ -91,7 +93,7 @@ def apimethod(method_name):
                 response = {'response': obj}
 
                 # return obj in correct format (xml or json)'
-                if format == '.xml':
+                if format == 'xml':
                     response = dict_to_xml(response)
                     mimetype = 'application/xml'
                 else:
