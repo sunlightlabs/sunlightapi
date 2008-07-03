@@ -22,7 +22,7 @@ DATABASE_PORT = ''
 
 EMAIL_HOST = 'smtp.sunlightlabs.com'
 EMAIL_PORT = 25
-EMAIL_HOST_USER = '***REMOVED***@sunlightlabs.com'
+EMAIL_HOST_USER = '***REMOVED***'
 EMAIL_HOST_PASSWORD = '***REMOVED***'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL='api@sunlightlabs.com'

@@ -1,4 +1,5 @@
 from optparse import make_option
+import re
 from django.core.management.base import BaseCommand
 from django.core.exceptions import ObjectDoesNotExist
 from sunlightapi.api.models import Legislator
@@ -23,6 +24,7 @@ class Command(BaseCommand):
               'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY',
               'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
               'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY', 'PR' ]
+    states = ['MD']
     pvs = VoteSmart('496ec1875a7885ec65a4ead99579642c')
 
     def handle(self, *args, **options):
@@ -62,31 +64,32 @@ class Command(BaseCommand):
             rep = self.pvs.Officials.getByOfficeState(5, state)['candidateList']['candidate']
             if type(rep) == dict:
                 rep = [rep]
-            officials.append(sen).append(rep)
+            officials.extend(sen)
+            officials.extend(rep)
         return officials
 
     def check_legislator_list(self):
         for leg in self.get_legislator_list():
             try:
-                Legislator.objects.get(pvs_id=leg['candidateId'])
+                Legislator.objects.get(votesmart_id=leg['candidateId'])
             except ObjectDoesNotExist:
                 print '%s %s (%s) needs to be added' % (leg['firstName'],
                                                         leg['lastName'],
                                                         leg['candidateId'])
 
     def update_legislator_list(self):
-        for leg in get_legislator_list():
+        for leg in self.get_legislator_list():
             try:
-                Legislator.objects.get(pvs_id=leg['candidateId'])
+                Legislator.objects.get(votesmart_id=leg['candidateId'])
             except ObjectDoesNotExist:
                 print 'Adding %s %s (%s)' % (leg['firstName'], leg['lastName'],
                                              leg['candidateId'])
-                add_legislator(leg)
+                self.add_legislator(leg)
 
     def add_legislator(self, official):
         person = {}
         # get basic information
-        person['votesmart_id'] = official['candidateId']
+        id = person['votesmart_id'] = official['candidateId']
         person['firstname'] = official['firstName']
         person['lastname'] = official['lastName']
         person['middlename'] = official['middleName']
@@ -98,7 +101,7 @@ class Command(BaseCommand):
 
         # get information from address
         try:
-            offices = pvs.Address.getOffice(id)['address']['office']
+            offices = self.pvs.Address.getOffice(id)['address']['office']
             if type(offices) != list:
                 offices = [offices]
             for office in offices:
@@ -112,7 +115,7 @@ class Command(BaseCommand):
         # get information from web address
         webaddr_re = re.compile('.+(house|senate)\.gov.+')
         try:
-            webaddrs = pvs.Address.getOfficeWebAddress(id)['webaddress']['address']
+            webaddrs = self.pvs.Address.getOfficeWebAddress(id)['webaddress']['address']
             if type(webaddrs) != list:
                 webaddrs = [webaddrs]
             for webaddr in webaddrs:
@@ -126,9 +129,9 @@ class Command(BaseCommand):
             pass
 
         # get information from bio
-        bio = pvs.CandidateBio.getBio(id)['bio']
+        bio = self.pvs.CandidateBio.getBio(id)['bio']
         person['fec_id'] = bio['candidate']['fecId']
         person['gender'] = bio['candidate']['gender']
         person['district'] = bio['office']['district']
 
-        Legislator.objects.create(person)
+        Legislator.objects.create(**person)
