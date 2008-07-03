@@ -24,7 +24,6 @@ class Command(BaseCommand):
               'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY',
               'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
               'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY', 'PR' ]
-    states = ['MD']
     pvs = VoteSmart('496ec1875a7885ec65a4ead99579642c')
 
     def handle(self, *args, **options):
