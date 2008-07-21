@@ -68,6 +68,8 @@ def apimethod(method_name):
                 error = 'Invalid Parameter'
             except MultipleObjectsReturned, e:
                 error = 'Multiple Legislators Returned'
+            except ObjectDoesNotExist, e:
+                error = 'No Such Object Exists'
             except APIError, e:
                 error = e.message
 
