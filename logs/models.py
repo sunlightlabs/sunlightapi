@@ -24,7 +24,7 @@ class ApiUser(models.Model):
         return status == 'A'
 
     def __unicode__(self):
-        return '%s (%s)' % (self.email, self.api_key)
+        return '%s (%s) [%s]' % (self.email, self.api_key, self.get_status_display())
 
     class Admin:
         pass
