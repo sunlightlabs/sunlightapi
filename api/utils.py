@@ -43,6 +43,8 @@ def apimethod(method_name):
             format = kwargs.pop('format')
             if format:
                 format = format[1:]
+            else:
+                format = 'json'
 
             # preprocess params from request.GET
             params = {}
@@ -92,6 +94,9 @@ def apimethod(method_name):
                 obj['sources'] = sources
 
             if not error:
+                # replace obj with obj['xml'] or obj['json'] if they exist
+                obj = obj.get(format, obj)
+
                 response = {'response': obj}
 
                 # return obj in correct format (xml or json)'
