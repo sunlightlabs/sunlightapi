@@ -101,7 +101,7 @@ def apimethod(method_name):
 
                 # return obj in correct format (xml or json)'
                 if format == 'xml':
-                    response = dict_to_xml(response)
+                    response = dict_to_xml(response).replace('&', '&amp;')
                     mimetype = 'application/xml'
                 else:
                     response = simplejson.dumps(response)
