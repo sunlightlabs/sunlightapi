@@ -1,6 +1,6 @@
 from django.db import models
-from django.newforms import ModelForm
-from django.newforms.util import ValidationError
+from django.forms import ModelForm
+from django.forms.util import ValidationError
 
 KEY_STATUS = (
     ('U', 'Unactivated'),
@@ -25,9 +25,6 @@ class ApiUser(models.Model):
 
     def __unicode__(self):
         return '%s (%s) [%s]' % (self.email, self.api_key, self.get_status_display())
-
-    class Admin:
-        pass
 
 class ApiUserForm(ModelForm):
     class Meta:

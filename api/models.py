@@ -60,9 +60,6 @@ class Legislator(models.Model):
     class Meta:
         ordering = ('lastname', 'firstname')
 
-    class Admin:
-        pass
-
 # show Legislator in databrowse app
 #from django.contrib import databrowse
 #databrowse.site.register(Legislator)
@@ -82,8 +79,6 @@ class Method(models.Model):
     def __unicode__(self):
         return self.name
 
-    class Admin:
-        pass
 
 class Source(models.Model):
     """ Sourcing information for API methods """
@@ -96,5 +91,3 @@ class Source(models.Model):
     def __unicode__(self):
         return '%s [updated %s]' % (self.name, self.last_update)
 
-    class Admin:
-        pass

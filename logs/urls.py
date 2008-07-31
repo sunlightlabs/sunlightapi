@@ -9,10 +9,5 @@ urlpatterns = patterns('sunlightapi.logs.views',
     url(r'^confirmkey/(?P<apikey>[0-9a-f]{32})/$', 'confirm_registration'),
 
     # logs
-    url(r'^logs/raw/(?P<page>\d+)/$', object_list,
-        {'queryset': LogEntry.objects.all(),
-         'paginate_by': 100,
-         'template_name': 'log_raw.html',
-         }),
     url(r'^logs/summary/$', 'summary'),
 )
