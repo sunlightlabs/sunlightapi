@@ -3,22 +3,28 @@ from sunlightapi.api.utils import apimethod, APIError
 from polipoly import AddressToDistrictService
 
 @apimethod('legislators.get')
-def legislators_get(params, return_list=False):
+def legislators_get(params):
     """ Run a query against the Legislators table based on params
 
-        Finds legislator(s) matching constraints passed in params dict, unless
-        return_list is true restricts results to a single legislator.
+        Finds legislator matching constraints passed in params dict
     """
-    if return_list:
-        legislators = Legislator.objects.filter(**params)
-        objs = []
-        for leg in legislators:
-            obj = {'legislator': leg.__dict__}
-            objs.append(obj)
-        obj = {'legislators': objs}
-    else:
-        leg = Legislator.objects.get(**params)
+    leg = Legislator.objects.get(**params)
+    obj = {'legislator': leg.__dict__}
+
+    return obj
+
+@apimethod('legislators.getList')
+def legislators_getlist(params):
+    """ Run a query for multiple Legislators based on params
+
+        Finds legislators matching constraints passed in params dict
+    """
+    legislators = Legislator.objects.filter(**params)
+    objs = []
+    for leg in legislators:
         obj = {'legislator': leg.__dict__}
+        objs.append(obj)
+    obj = {'legislators': objs}
 
     return obj
 

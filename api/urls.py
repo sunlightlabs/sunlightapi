@@ -4,8 +4,7 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('sunlightapi.api.views',
     url(r'^legislators.get(?P<format>(\.(xml|json))?)$', 'legislators_get'),
-    url(r'^legislators.getList(?P<format>(\.(xml|json))?)$', 'legislators_get',
-        {'return_list': True}),
+    url(r'^legislators.getList(?P<format>(\.(xml|json))?)$', 'legislators_getlist'),
 
     url(r'^districts.getDistrictsFromZip(?P<format>(\.(xml|json))?)$', 'districts_from_zip'),
     url(r'^districts.getZipsFromDistrict(?P<format>(\.(xml|json))?)$', 'zips_from_district'),
