@@ -52,7 +52,11 @@ def apimethod(method_name):
             apikey = request.GET.get('apikey', None)
             for key,val in request.GET.iteritems():
                 if key not in ('metadata', 'apikey'):
-                    params[str(key)] = val[0]
+                    # unlistify single items
+                    if len(val) == 1:
+                        params[str(key)] = val[0]
+                    else:
+                        params[str(key)+'__in'] = val
 
             # do authorization
             try:
