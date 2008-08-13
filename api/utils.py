@@ -12,7 +12,7 @@ class APIError(Exception):
 
 
 def dict_to_xml(d):
-    """ Convert a python dictionary to a simple XML representation
+    """ Recursively convert a python dictionary to a simple XML representation
 
         Dictionary keys create begin/end tags, lists are shown appended together
         and other items are output as they were:

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Sunlight Labs API{% endblock title %}
+
+{% block content %}
+<h1>Sunlight Labs API</h1>
+
+<h2>About the API</h2>
+<p>The Sunlight Labs API provides methods for obtaining basic information on Members of Congress, legislator IDs used by various websites, and lookups between places and the politicians that represent them.  The primary purpose of the API is to facilitate mashups involving politicians and the various other APIs that are out there.</p>
+
+<p>Anyone can use the Sunlight Labs API, all it takes is a <a href="/api/register/">15 second sign-up</a> so that we can keep track of how many people are using the API and have a way to get in contact with you should there be any changes or API related news.</p>
+
+<br /><a id="register_now" href="/api/register/">Register for your Sunlight Labs API key now!</a><br />
+
+For details on available methods and how to make use of the API, view the <a href="/api/docs/">Sunlight Labs API Documentation</a>.
+
+<p>We also recommend that you sign up for the
+<a href="http://groups.google.com/group/sunlightlabs-api-discuss">API discussion list</a> to communicate with other users and receive email alerts of the latest updates.</p>
+
+
+<div id="twitter_div">
+To subscribe to updates follow <a href="http://twitter.com/sunlightlabsapi/">sunlightlabsapi</a> on <img src="http://sunlightlabs.com/api/img/twitter.jpg" / alt="twitter" name="twitter">
+<ul id="twitter_update_list"></ul></div>
+<script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
+<script type="text/javascript" src="http://twitter.com/statuses/user_timeline/sunlightlabsapi.json?callback=twitterCallback2&amp;count=5"></script>
+
+
+<h2>Terms of Service</h2>
+
+Use of the Sunlight Labs API is subject to the following terms:
+
+<ul>
+<li>The Sunlight Foundation/Sunlight Labs can not be held liable for the accuracy or availability of the service provided and do not make any claims to accuracy, completeness, availability, or any other warranty or guarantee.</li>
+<li>When using the Sunlight Labs API, attribution is appreciated but not required.  Implication or claim of endorsement is strictly prohibited.</li>
+<li>Usage of the API depends upon an API key which should only be used by the individual/organization which requested it.  Sharing or distribution of API keys is not permitted.</li>
+<li>Usage is currently not limited, but excessive usage is monitored and may be grounds for the termination of service.  If you plan to make heavy use of the Sunlight Labs API please contact us beforehand so we can be sure.</li>
+<li>Sunlight Labs does not distribute specifics of API usage except in cases where we have obtained your permission, we do however reserve the right to track and publish aggregate statistics on usage.</li>
+<li>These terms may be modified at any time, users will be notified of any changes via the email address on file.</li>
+<li>Service may be terminated at any time at the discretion of Sunlight Labs.</li>
+</ul>
+
+<h2>About the Data</h2>
+
+<p>Our data comes from a variety of sources and updated regularly, a list of all sources with their update dates are listed below.</p>
+
+<table>
+    <thead><tr><th>Source</th><th>Last Update</th></tr></thead>
+    <tbody>
+    {% for source in sources %}
+    <tr><td><a href="{{source.url}}">{{source.name}}</a></td><td>{{source.last_update}}</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<p>To find out specific details about what sources were involved in the data from any given call append the metadata=true option onto the parameters of any function call.  </p>
+
+<h3>Download All Data</h3>
+
+<p>Occasionally we make a dump of all of the data in the API for those users that are best served by a full copy of this data.  If you are making heavy use of the API, particularly in an application that involves pulling in nearly all of the information the API provides it is recommended that you use this archive.<p>
+
+<ul>
+<li><a href="/api/media/apidump.csv.gz">Latest Sunlight Labs API Legislator Dump</a> updated July 3rd (added Donna Edwards for MD-04)</li>
+</ul>
+
+<a name="photos"></a>
+
+<h3>Photos of the 110th Congress</h3>
+
+<p>We also have taken the effort to compile all of the images of Members of Congress into an archive.  The following two archives are provided for convenience with images pulled from the <a href="http://www.gpoaccess.gov/cdirectory/index.html">Congressional Directory</a>.</p>
+
+<ul>
+<li><a href="http://assets.sunlightfoundation.com/moc/40x50.zip">small [40x50]</a></li>
+<li><a href="http://assets.sunlightfoundation.com/moc/100x125.zip">large [100x125]</a></li>
+</ul>
+
+<h2>Historical Information</h2>
+<p>In 2006 Sunlight Labs launched an API aimed at helping people get their
+political mashups off the ground.  In the last two years many new
+resources have come into creation such as
+<a href="http://opencongress.org">OpenCongress</a> and
+<a href="http://maplight.org">MAPLight.org</a> and existing sites like
+<a href="http://www.votesmart.org/services_api.php">Project Vote Smart</a>
+have introduced APIs of their own.</p>
+
+<p>In July of 2008, Sunlight Labs launched a major update to the Labs API
+that greatly simplifies usage and reduces the number of calls most users
+will need to make to get the data they want.  While users of the old API may
+see less methods and assume reduced functionality, nearly all of the old
+functionality is present, but redundant or unnecessary methods have been
+removed.  (Details on transitioning from the old API to the new are
+available in the <a href="/api/docs/transition_guide/">transition guide</a>.)</p>
+
+{% endblock content %}

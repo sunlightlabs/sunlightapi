@@ -91,3 +91,6 @@ class Source(models.Model):
     def __unicode__(self):
         return '%s [updated %s]' % (self.name, self.last_update)
 
+
+    class Meta:
+        ordering = ('last_update',)
