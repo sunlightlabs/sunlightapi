@@ -72,7 +72,7 @@ def legislators_search(params):
     if buckets:
         scores = sorted([(score_match(name, bucket), bucket) for bucket in buckets], reverse=True)
         results = [{'result': {'score': score, 'legislator': bucket.legislator.__dict__}}
-            for score,bucket in scores if score > threshhold]
+            for score,bucket in scores if score > threshold]
 
         return {'results': results}
     else:
