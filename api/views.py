@@ -1,6 +1,12 @@
-from sunlightapi.api.models import Legislator, ZipDistrict
-from sunlightapi.api.utils import apimethod, APIError
+import re
+import string
 from polipoly import AddressToDistrictService
+from Levenshtein import jaro_winkler
+from django.core.exceptions import ObjectDoesNotExist
+from sunlightapi.api.models import Legislator, ZipDistrict, LegislatorBucket
+from sunlightapi.api.utils import apimethod, APIError
+
+RE_TITLES = re.compile('(Sen((ator)|\.)?)|(Rep((resentative)|(\.))?)\s+')
 
 @apimethod('legislators.get')
 def legislators_get(params):
@@ -27,6 +33,50 @@ def legislators_getlist(params):
     obj = {'legislators': objs}
 
     return obj
+
+def score_match(str, bucket):
+    # the string is flipped to properly prioritize the front of string (J-Winkler)
+    if bucket.name_type in (LegislatorBucket.FIRST_LAST, LegislatorBucket.NICK_LAST):
+        if bucket.name_type == LegislatorBucket.FIRST_LAST:
+            bucket.name_type = LegislatorBucket.LAST_FIRST
+        else:
+            bucket.name_type = LegislatorBucket.LAST_NICK
+        str = ' '.join(reversed(str.rsplit(' ',1)))
+
+    leg_name = bucket.get_legislator_name()
+
+    return jaro_winkler(str, leg_name)
+
+@apimethod('legislators.matchName')
+def legislators_search(params):
+    """ Attempt to match a Legislator based on their name
+
+        * remove title if one is found (Sen/Rep/Senator/Representative)
+        * use (remaining) initials of parameter to get Bucket
+        * find via string matching algorithm on all legislators in the Bucket
+    """
+    name = string.capwords(params['name'])
+    threshold = params.get('threshold', 0.8)
+
+    name = RE_TITLES.sub('', name)
+    fingerprint = ''.join(re.findall('[A-Z]', name))
+
+    buckets = LegislatorBucket.objects.filter(bucket=fingerprint)
+
+    # if didn't find them, try extracting the last name
+    if not buckets and len(fingerprint) > 1:
+        buckets = LegislatorBucket.objects.filter(bucket=fingerprint[-1])
+        name = name.rsplit(' ', 1)[-1]
+
+    # get sorted list of scores, and filter those below threshold
+    if buckets:
+        scores = sorted([(score_match(name, bucket), bucket) for bucket in buckets], reverse=True)
+        results = [{'result': {'score': score, 'legislator': bucket.legislator.__dict__}}
+            for score,bucket in scores if score > threshhold]
+
+        return {'results': results}
+    else:
+        return {'results': [] }
 
 @apimethod('districts.getDistrictsFromZip')
 def districts_from_zip(params):

@@ -60,9 +60,39 @@ class Legislator(models.Model):
     class Meta:
         ordering = ('lastname', 'firstname')
 
-# show Legislator in databrowse app
-#from django.contrib import databrowse
-#databrowse.site.register(Legislator)
+class LegislatorBucket(models.Model):
+    FIRST_LAST = 1
+    LAST_FIRST = 2
+    LAST = 3
+    NICK_LAST = 4
+    LAST_NICK = 5
+    BUCKET_NAME_TYPE = (
+        (FIRST_LAST, 'firstname lastname'),
+        (LAST_FIRST, 'lastname firstname'),
+        (LAST, 'lastname'),
+        (NICK_LAST, 'nickname lastname'),
+        (LAST_NICK, 'lastname nickname')
+    )
+
+    bucket = models.CharField(max_length=5)
+    name_type = models.PositiveSmallIntegerField(choices=BUCKET_NAME_TYPE)
+    legislator = models.ForeignKey(Legislator)
+
+    def get_legislator_name(self):
+        if self.name_type == self.FIRST_LAST:
+            return ' '.join([self.legislator.firstname, self.legislator.lastname])
+        elif self.name_type == self.LAST_FIRST:
+            return ' '.join([self.legislator.lastname, self.legislator.firstname])
+        elif self.name_type == self.LAST:
+            return self.legislator.lastname
+        elif self.name_type == self.NICK_LAST:
+            return ' '.join([self.legislator.nickname, self.legislator.lastname])
+        elif self.name_type == self.LAST_NICK:
+            return ' '.join([self.legislator.lastname, self.legislator.nickname])
+
+    def __unicode__(self):
+        return '%s is %s of %s' % (self.bucket, self.get_name_type_display(),
+                                   self.legislator)
 
 class ZipDistrict(models.Model):
     """ zip5 to district mapping """
