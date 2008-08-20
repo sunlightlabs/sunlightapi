@@ -50,7 +50,7 @@ def apimethod(method_name):
             params = {}
             metadata = request.GET.get('metadata', None)
             apikey = request.GET.get('apikey', None)
-            for key,val in request.GET.iteritems():
+            for key,val in request.GET.lists():
                 if key not in ('metadata', 'apikey'):
                     # unlistify single items
                     if len(val) == 1:
