@@ -35,8 +35,8 @@ def legislators_getlist(params):
     return obj
 
 def score_match(str, bucket):
-    # the string is flipped to properly prioritize the front of string (J-Winkler)
-    if bucket.name_type in (LegislatorBucket.FIRST_LAST, LegislatorBucket.NICK_LAST):
+    # the string is flipped to properly prioritize the front of string (Jaro-Winkler)
+    if bucket.name_type in (LegislatorBucket.FIRST_LAST, LegislatorBucket.NICK_LAST) and ' ' in str:
         if bucket.name_type == LegislatorBucket.FIRST_LAST:
             bucket.name_type = LegislatorBucket.LAST_FIRST
         else:
@@ -55,11 +55,12 @@ def legislators_search(params):
         * use (remaining) initials of parameter to get Bucket
         * find via string matching algorithm on all legislators in the Bucket
     """
-    name = string.capwords(params['name'])
-    threshold = double(params.get('threshold', 0.8))
+    name = re.sub('[^a-zA-Z ]', '', params['name'])
+    name = string.capwords(name)
+    threshold = float(params.get('threshold', 0.8))
 
     name = RE_TITLES.sub('', name)
-    fingerprint = ''.join(re.findall('[A-Z]', name))
+    fingerprint = re.sub('[^A-Z]', '', name)
 
     buckets = LegislatorBucket.objects.filter(bucket=fingerprint)
 
