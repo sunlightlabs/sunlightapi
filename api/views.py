@@ -56,7 +56,7 @@ def legislators_search(params):
         * find via string matching algorithm on all legislators in the Bucket
     """
     name = string.capwords(params['name'])
-    threshold = params.get('threshold', 0.8)
+    threshold = double(params.get('threshold', 0.8))
 
     name = RE_TITLES.sub('', name)
     fingerprint = ''.join(re.findall('[A-Z]', name))
