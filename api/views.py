@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from sunlightapi.api.models import Legislator, ZipDistrict, LegislatorBucket
 from sunlightapi.api.utils import apimethod, APIError
 
-RE_TITLES = re.compile('(Sen((ator)|\.)?)|(Rep((resentative)|(\.))?)\s+')
+RE_TITLES = re.compile('((Congress(wo)?man)|(Sen((ator)|\.)?)|(Rep((resentative)|(\.))?))\s+')
 
 @apimethod('legislators.get')
 def legislators_get(params):
@@ -47,7 +47,7 @@ def score_match(str, bucket):
 
     return jaro_winkler(str, leg_name)
 
-@apimethod('legislators.matchName')
+@apimethod('legislators.search')
 def legislators_search(params):
     """ Attempt to match a Legislator based on their name
 
