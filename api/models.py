@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.localflavor.us.models import PhoneNumberField
 
 # choices for party
 PARTIES = (
@@ -31,11 +32,12 @@ class Legislator(models.Model):
     state = models.CharField(max_length=2)
     district = models.CharField(max_length=12, blank=True)
     party = models.CharField(max_length=1, choices=PARTIES)
+    active = models.BooleanField(default=True)
 
     # contact info
     congress_office = models.CharField(max_length=50)
-    phone = models.PhoneNumberField()
-    fax = models.PhoneNumberField()
+    phone = PhoneNumberField()
+    fax = PhoneNumberField()
     website = models.URLField()
     webform = models.URLField(blank=True)
     email = models.EmailField(blank=True)
@@ -51,6 +53,7 @@ class Legislator(models.Model):
     bioguide_id = models.CharField(max_length=20, primary_key=True)
     govtrack_id = models.CharField(max_length=20)
     eventful_id = models.CharField(max_length=20, blank=True)
+    twitter_id = models.CharField(max_length=20, blank=True)
     congresspedia_url = models.URLField()
 
     def __unicode__(self):
