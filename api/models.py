@@ -17,8 +17,19 @@ GENDERS = (
     ('F', 'Female'),
     ('M', 'Male'))
 
+class ActiveLegislatorManager(models.Manager):
+    def get_query_set(self):
+        return super(ActiveLegislatorManager, self).get_query_set().filter(in_office=True)
+
+class AllLegislatorManager(models.Manager):
+    def get_query_set(self):
+        return super(AllLegislatorManager, self).get_query_set()
+
 class Legislator(models.Model):
     """ Model containing basic information for legislators """
+
+    objects = ActiveLegislatorManager()
+    all_legislators = AllLegislatorManager()
 
     # name
     firstname = models.CharField(max_length=30)
@@ -32,7 +43,7 @@ class Legislator(models.Model):
     state = models.CharField(max_length=2)
     district = models.CharField(max_length=12, blank=True)
     party = models.CharField(max_length=1, choices=PARTIES)
-    active = models.BooleanField(default=True)
+    in_office = models.BooleanField(default=True)
 
     # contact info
     congress_office = models.CharField(max_length=50)
