@@ -28,9 +28,9 @@ class AllLegislatorManager(models.Manager):
 class Legislator(models.Model):
     """ Model containing basic information for legislators """
 
-    objects = ActiveLegislatorManager()
     all_legislators = AllLegislatorManager()
-
+    objects = ActiveLegislatorManager()
+    
     # name
     firstname = models.CharField(max_length=30)
     middlename = models.CharField(max_length=30, blank=True)

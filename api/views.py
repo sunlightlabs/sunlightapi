@@ -14,7 +14,10 @@ def legislators_get(params):
 
         Finds legislator matching constraints passed in params dict
     """
-    leg = Legislator.objects.get(**params)
+    if params.pop('all_legislators', False) or 'active' in params:
+        leg = Legislator.all_legislators.get(**params)
+    else:
+        leg = Legislator.objects.get(**params)
     obj = {'legislator': leg.__dict__}
 
     return obj
@@ -25,7 +28,10 @@ def legislators_getlist(params):
 
         Finds legislators matching constraints passed in params dict
     """
-    legislators = Legislator.objects.filter(**params)
+    if params.pop('all_legislators', False) or 'active' in params:
+        legislators = Legislator.all_legislators.filter(**params)
+    else:
+        legislators = Legislator.objects.filter(**params)
     objs = []
     for leg in legislators:
         obj = {'legislator': leg.__dict__}
