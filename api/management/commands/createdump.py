@@ -30,5 +30,7 @@ class Command(BaseCommand):
             print leg
             utf8dict = {}
             for k,v in leg.__dict__.iteritems():
-                utf8dict[k] = v.encode('utf-8')
+                if isinstance(v, str):
+                    v = v.encode('utf-8')
+                utf8dict[k] = v
             writer.writerow(utf8dict)
