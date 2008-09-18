@@ -1,5 +1,6 @@
 from optparse import make_option
 import gzip
+from types import UnicodeType
 from csv import DictWriter
 from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import ObjectDoesNotExist
@@ -30,7 +31,7 @@ class Command(BaseCommand):
         for leg in Legislator.all_legislators.all():
             utf8dict = {}
             for k,v in leg.__dict__.iteritems():
-                if isinstance(v, str):
+                if isinstance(v, UnicodeType):
                     v = v.encode('utf-8')
                 utf8dict[k] = v
             writer.writerow(utf8dict)
