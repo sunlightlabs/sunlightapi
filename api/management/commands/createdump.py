@@ -18,16 +18,16 @@ class Command(BaseCommand):
 
     def csv_dump(self, filename):
         keys = ['title', 'firstname', 'middlename', 'lastname', 'name_suffix',
-                'nickname', 'party', 'state', 'district', 'gender', 'phone',
-                'fax', 'website', 'webform', 'email', 'congress_office',
-                'bioguide_id', 'votesmart_id', 'fec_id', 'govtrack_id',
-                'crp_id', 'eventful_id', 'sunlight_old_id', 'congresspedia_url']
+                'nickname', 'party', 'state', 'district', 'in_office',
+                'gender', 'phone', 'fax', 'website', 'webform', 'email',
+                'congress_office', 'bioguide_id', 'votesmart_id', 'fec_id',
+                'govtrack_id', 'crp_id', 'eventful_id', 'sunlight_old_id',
+                'twitter_id', 'congresspedia_url']
         writer = DictWriter(gzip.open(filename, 'w'), keys)
         headernames = dict(zip(keys, keys))
         writer.writerow(headernames)
 
-        for leg in Legislator.objects.all():
-            print leg
+        for leg in Legislator.all_legislators.all():
             utf8dict = {}
             for k,v in leg.__dict__.iteritems():
                 if isinstance(v, str):
