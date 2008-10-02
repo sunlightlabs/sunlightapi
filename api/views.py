@@ -32,10 +32,28 @@ def legislators_getlist(params):
         legislators = Legislator.all_legislators.filter(**params)
     else:
         legislators = Legislator.objects.filter(**params)
-    objs = []
-    for leg in legislators:
-        obj = {'legislator': leg.__dict__}
-        objs.append(obj)
+
+    objs = [{'legislator': leg.__dict__} for leg in legislators]
+    obj = {'legislators': objs}
+
+    return obj
+
+@apimethod('legislators.allForZip')
+def legislators_allforzip(params):
+    """ Find all legislators that may represent a given zipcode.
+
+        Typically this means 2 senators and 1 or more representatives.
+    """
+    zds = ZipDistrict.objects.filter(zip=params['zip'])
+    legislators = set()
+    states = set()
+    for zd in zds:
+        legislators.add(Legislator.objects.get(state=zd.state, district=zd.district))
+        if zd.state not in states:
+            states.add(zd.state)
+            legislators.update(Legislator.objects.filter(state=zd.state, title='Sen'))
+
+    objs = [{'legislator': leg.__dict__} for leg in legislators]
     obj = {'legislators': objs}
 
     return obj

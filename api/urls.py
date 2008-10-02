@@ -13,6 +13,7 @@ urlpatterns = patterns('sunlightapi.api.views',
 
     url(r'^legislators.get%s' % FORMAT_STR, 'legislators_get'),
     url(r'^legislators.getList%s' % FORMAT_STR, 'legislators_getlist'),
+    url(r'^legislators.allForZip%s' % FORMAT_STR, 'legislators_allforzip'),
     url(r'^legislators.search%s' % FORMAT_STR, 'legislators_search'),
 
     url(r'^districts.getDistrictsFromZip%s' % FORMAT_STR, 'districts_from_zip'),
