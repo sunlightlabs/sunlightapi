@@ -58,7 +58,7 @@ class Legislator(models.Model):
 
     # other site ids
     sunlight_old_id = models.CharField(max_length=20, blank=True)
-    votesmart_id = models.CharField(max_length=20)
+    votesmart_id = models.CharField(max_length=20, blank=True)
     fec_id = models.CharField(max_length=20)
     crp_id = models.CharField(max_length=20)
     bioguide_id = models.CharField(max_length=20, primary_key=True)
