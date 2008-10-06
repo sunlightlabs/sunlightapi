@@ -41,15 +41,15 @@ class Legislator(models.Model):
     # job
     title = models.CharField(max_length=3, choices=TITLES)
     state = models.CharField(max_length=2)
-    district = models.CharField(max_length=12, blank=True)
+    district = models.CharField(max_length=12)
     party = models.CharField(max_length=1, choices=PARTIES)
     in_office = models.BooleanField(default=True)
 
     # contact info
-    congress_office = models.CharField(max_length=50)
-    phone = PhoneNumberField()
-    fax = PhoneNumberField()
-    website = models.URLField()
+    congress_office = models.CharField(max_length=50, blank=True)
+    phone = PhoneNumberField(blank=True)
+    fax = PhoneNumberField(blank=True)
+    website = models.URLField(blank=True)
     webform = models.URLField(blank=True)
     email = models.EmailField(blank=True)
 
