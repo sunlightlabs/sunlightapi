@@ -10,7 +10,9 @@ PARTIES = (
 # short and long form of titles
 TITLES = (
     ('Rep', 'Representative'),
-    ('Sen', 'Senator'))
+    ('Sen', 'Senator'),
+    ('Del', 'Delegate'),
+    ('Com', 'Resident Commissioner'))
 
 # short and long form of genders
 GENDERS = (
