@@ -1,5 +1,8 @@
 # Django settings for sunlight_api development
 
+import os
+ROOT = lambda f : os.path.join(os.path.dirname(__file__), f).replace('\\','/')
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 if DEBUG:
@@ -13,8 +16,10 @@ ADMINS = (
 MANAGERS = ADMINS
 EMAIL_SUBJECT_PREFIX = '[Sunlight API] '
 
+CD_SHAPEFILE = ROOT('congdist/cd99_110')
+
 DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = 'apidata.sqlite3'
+DATABASE_NAME = ROOT('apidata.sqlite3')
 DATABASE_USER = ''
 DATABASE_PASSWORD = ''
 DATABASE_HOST = ''
@@ -66,7 +71,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'sunlightapi.urls'
 
 TEMPLATE_DIRS = (
-    '/home/james/sunlight/sunlightapi/templates/',
+    ROOT('templates/'),
 )
 
 INSTALLED_APPS = (
@@ -77,6 +82,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.databrowse',
     'django.contrib.flatpages',
-    'api',
-    'sunlightapi.logs',
+    'sunlightapi.api',
+    'sunlightapi.legislators',
+    'sunlightapi.districts',
+    'sunlightapi.lobbyists',
 )

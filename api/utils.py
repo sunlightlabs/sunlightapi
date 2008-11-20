@@ -1,10 +1,11 @@
 from django.core.exceptions import MultipleObjectsReturned, FieldError, ObjectDoesNotExist
 from django.utils import simplejson
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
-from sunlightapi.api.models import Source
-from sunlightapi.logs.models import LogEntry, ApiUser
+from sunlightapi.api.models import Source, LogEntry, ApiUser
 
 """ Utilities for creating API Methods """
+
+FORMAT_STR = '(?P<format>(\.(xml|json))?)$'
 
 class APIError(Exception):
     def __init__(self, message):
@@ -30,6 +31,8 @@ def dict_to_xml(d):
     else:
         return d
 
+from django.conf.urls.defaults import url
+from sunlightapi.urls import urlpatterns as _api_urls
 
 def apimethod(method_name):
     """ Decorator to do the repeat work of all api methods.
@@ -37,6 +40,7 @@ def apimethod(method_name):
         Turns request.GET into params and converts return value of func from
         a python object to JSON or XML according to format parameter.
     """
+    
     def decorator(func):
         def newfunc(request, *args, **kwargs):
 
@@ -120,6 +124,10 @@ def apimethod(method_name):
         newfunc.__dict__.update(func.__dict__)
         newfunc.__doc__ = func.__doc__
         newfunc.__module__ = func.__module__
+        
+        # append url to patterns
+        _api_urls.append(url(r'^%s%s' % (method_name, FORMAT_STR), newfunc))
 
         return newfunc
+        
     return decorator
