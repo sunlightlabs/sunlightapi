@@ -1,4 +1,5 @@
 from django.db import models
+from sunlightapi.api.models import NameMatchingBucket
 
 class Filing(models.Model):
     filing_id = models.CharField(max_length=36, primary_key=True)
@@ -80,3 +81,11 @@ class Lobbyist(models.Model):
         ldict.pop('id')
         ldict.pop('filing_id')
         return {'lobbyist': ldict}
+    
+    def with_filing(self):
+        ldict = dict(self.__dict__)
+        ldict.pop('id')
+        ldict['client_name'] = self.filing.client_name
+    
+class LobbyistBucket(NameMatchingBucket):
+    person = models.ForeignKey(Lobbyist)

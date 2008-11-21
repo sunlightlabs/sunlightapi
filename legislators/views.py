@@ -87,7 +87,7 @@ def legislators_search(params):
     name = RE_TITLES.sub('', name)
     fingerprint = re.sub('[^A-Z]', '', name)
 
-    buckets = LegislatorBucket.objects.filter(bucket=fingerprint)
+    buckets = LegislatorBucket.objects.filter(bucket=fingerprint).select_related()
 
     # if didn't find them, try extracting the last name
     if not buckets and len(fingerprint) > 1:
@@ -97,9 +97,9 @@ def legislators_search(params):
     # get sorted list of scores, and filter those below threshold
     if buckets:
         scores = sorted([(score_match(name, bucket), bucket) for bucket in buckets], reverse=True)
-        results = [{'result': {'score': score, 'legislator': bucket.legislator.__dict__}}
+        results = [{'result': {'score': score, 'legislator': bucket.person.__dict__}}
             for score,bucket in scores if score > threshold]
 
         return {'results': results}
     else:
-        return {'results': [] }
+        return {'results': []}
