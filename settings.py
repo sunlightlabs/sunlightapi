@@ -3,6 +3,9 @@
 import os
 ROOT = lambda f : os.path.join(os.path.dirname(__file__), f).replace('\\','/')
 
+# set base URL for API
+API_URL_BASE = 'api/'
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 if DEBUG:

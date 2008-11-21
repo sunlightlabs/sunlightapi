@@ -33,6 +33,7 @@ def dict_to_xml(d):
 
 from django.conf.urls.defaults import url
 from sunlightapi.urls import urlpatterns as _api_urls
+from sunlightapi.settings import API_URL_BASE
 
 def apimethod(method_name):
     """ Decorator to do the repeat work of all api methods.
@@ -126,7 +127,7 @@ def apimethod(method_name):
         newfunc.__module__ = func.__module__
         
         # append url to patterns
-        _api_urls.append(url(r'^%s%s' % (method_name, FORMAT_STR), newfunc))
+        _api_urls.append(url(r'^%s%s%s' % (API_URL_BASE, method_name, FORMAT_STR), newfunc))
 
         return newfunc
         
