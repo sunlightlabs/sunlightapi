@@ -91,7 +91,7 @@ class NameMatchingBucket(models.Model):
     bucket = models.CharField(max_length=5)
     name_type = models.PositiveSmallIntegerField(choices=BUCKET_NAME_TYPE)
     
-    def get_legislator_name(self):
+    def get_person_name(self):
         if self.name_type == self.FIRST_LAST:
             return ' '.join([self.person.firstname, self.person.lastname])
         elif self.name_type == self.LAST_FIRST:

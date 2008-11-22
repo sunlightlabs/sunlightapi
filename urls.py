@@ -14,3 +14,4 @@ urlpatterns = patterns('',
 # consider using something similar to admin.autodiscover()
 from sunlightapi.legislators import views
 from sunlightapi.districts import views
+from sunlightapi.lobbyists import views

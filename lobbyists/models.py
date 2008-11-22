@@ -40,6 +40,7 @@ class Filing(models.Model):
     
     def to_dict(self):
         fdict = dict(self.__dict__)
+        fdict['filing_date'] = str(self.filing_date)
         fdict['issues'] = [i.to_dict() for i in self.issues.all()]
         fdict['lobbyists'] = [l.to_dict() for l in self.lobbyists.all()]
         return {'filing': fdict}

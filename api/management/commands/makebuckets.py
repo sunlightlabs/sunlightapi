@@ -5,8 +5,6 @@ from sunlightapi.api.models import NameMatchingBucket
 from sunlightapi.legislators.models import Legislator, LegislatorBucket
 from sunlightapi.lobbyists.models import Lobbyist, LobbyistBucket
 
-import itertools
-
 def create_buckets(person, bucket_type):
     
     # first and last initial
@@ -39,10 +37,12 @@ class Command(BaseCommand):
 
     def handle(self, *fname, **options):
         # fill all the buckets
+        LegislatorBucket.objects.delete()
         for leg in Legislator.objects.all():
             print leg
             create_buckets(leg, LegislatorBucket)
 
+        LobbyistBucket.objects.delete()
         for lobbyist in Lobbyist.objects.all():
             print lobbyist
             create_buckets(lobbyist, LobbyistBucket)

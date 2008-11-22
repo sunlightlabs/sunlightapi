@@ -1,11 +1,10 @@
 import re
 import string
 from polipoly import AddressToDistrictService
-from Levenshtein import jaro_winkler
 from django.core.exceptions import ObjectDoesNotExist
 from sunlightapi.legislators.models import Legislator, LegislatorBucket
 from sunlightapi.districts.models import ZipDistrict
-from sunlightapi.api.utils import apimethod, APIError
+from sunlightapi.api.utils import apimethod, APIError, score_match
 
 RE_TITLES = re.compile('((Congress(wo)?man)|(Sen((ator)|\.)?)|(Rep((resentative)|(\.))?))\s+')
 
@@ -58,19 +57,6 @@ def legislators_allforzip(params):
     obj = {'legislators': objs}
 
     return obj
-
-def score_match(str, bucket):
-    # the string is flipped to properly prioritize the front of string (Jaro-Winkler)
-    if bucket.name_type in (LegislatorBucket.FIRST_LAST, LegislatorBucket.NICK_LAST) and ' ' in str:
-        if bucket.name_type == LegislatorBucket.FIRST_LAST:
-            bucket.name_type = LegislatorBucket.LAST_FIRST
-        else:
-            bucket.name_type = LegislatorBucket.LAST_NICK
-        str = ' '.join(reversed(str.rsplit(' ',1)))
-
-    leg_name = bucket.get_legislator_name()
-
-    return jaro_winkler(str, leg_name)
 
 @apimethod('legislators.search')
 def legislators_search(params):

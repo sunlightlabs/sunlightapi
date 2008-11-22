@@ -1,9 +1,13 @@
+""" Utilities for creating API Methods """
+
 from django.core.exceptions import MultipleObjectsReturned, FieldError, ObjectDoesNotExist
 from django.utils import simplejson
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
-from sunlightapi.api.models import Source, LogEntry, ApiUser
-
-""" Utilities for creating API Methods """
+from django.conf.urls.defaults import url
+from Levenshtein import jaro_winkler
+from sunlightapi.api.models import Source, LogEntry, ApiUser, NameMatchingBucket
+from sunlightapi.urls import urlpatterns as _api_urls
+from sunlightapi.settings import API_URL_BASE
 
 FORMAT_STR = '(?P<format>(\.(xml|json))?)$'
 
@@ -16,7 +20,7 @@ def dict_to_xml(d):
     """ Recursively convert a python dictionary to a simple XML representation
 
         Dictionary keys create begin/end tags, lists are shown appended together
-        and other items are output as they were:
+        with spaces and other items are output as they were:
 
         >>> dict_to_xml({'html':{'ul':[{'li':'uno'}, {'li':'dos'},
                          {'li':'tres'}]}})
@@ -27,13 +31,24 @@ def dict_to_xml(d):
         return ''.join(['<%s>%s</%s>' % (k,dict_to_xml(v),k)
                         for k,v in d.iteritems()])
     elif type(d) == list:
-        return ''.join([dict_to_xml(i) for i in d])
+        return ' '.join([dict_to_xml(i) for i in d])
     else:
         return d
+    
+    
+def score_match(str, bucket):
+    # the string is flipped to properly prioritize the front of string (due to requirements of Jaro-Winkler)
+    if bucket.name_type in (NameMatchingBucket.FIRST_LAST, NameMatchingBucket.NICK_LAST) and ' ' in str:
+        if bucket.name_type == NameMatchingBucket.FIRST_LAST:
+            bucket.name_type = NameMatchingBucket.LAST_FIRST
+        else:
+            bucket.name_type = NameMatchingBucket.LAST_NICK
+        str = ' '.join(reversed(str.rsplit(' ',1)))
 
-from django.conf.urls.defaults import url
-from sunlightapi.urls import urlpatterns as _api_urls
-from sunlightapi.settings import API_URL_BASE
+    name = bucket.get_person_name()
+
+    return jaro_winkler(str, name)
+
 
 def apimethod(method_name):
     """ Decorator to do the repeat work of all api methods.
