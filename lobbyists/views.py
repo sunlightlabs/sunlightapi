@@ -1,6 +1,6 @@
 import re
 import string
-from collections import defaultdict
+#from collections import defaultdict  # python 2.5 
 from sunlightapi.lobbyists.models import Filing, Lobbyist, LobbyistBucket
 from sunlightapi.api.utils import apimethod, APIError, score_match
 
@@ -42,7 +42,7 @@ def lobbyists_search(params):
         scores = sorted([(score_match(name, bucket), bucket) for bucket in buckets], reverse=True)
         
         # store list of results and seen lobbyists
-        lobbyists = defaultdict(list)
+        lobbyists = dict() #defaultdict(list)
         
         # run a pass over scores, grouping by unique name/clientname
         for score, bucket in scores:
@@ -55,7 +55,8 @@ def lobbyists_search(params):
                 # check if this lobbyist name+client combo has been seen before
                 unique_fields = (score, lobbyist.firstname, lobbyist.lastname,
                                  lobbyist.filing.client_name)
-                lobbyists[unique_fields].append(lobbyist.filing_id)
+                # python 2.5 would use defaultdict here
+                lobbyists.setdefault(unique_fields,[]).append(lobbyist.filing_id)
             else:
                 break
 
