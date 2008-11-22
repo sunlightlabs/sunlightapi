@@ -7,7 +7,7 @@ class Filing(models.Model):
     filing_date = models.DateField()
     filing_amount = models.IntegerField(null=True)
     filing_year = models.IntegerField()
-    filing_type = models.CharField(max_length=30)
+    filing_type = models.CharField(max_length=50)
     
     # client is optional
     client_senate_id = models.IntegerField(null=True)
@@ -16,7 +16,7 @@ class Filing(models.Model):
     client_state = models.CharField(max_length=30, null=True)
     client_ppb_country = models.CharField(max_length=30, null=True)
     client_ppb_state = models.CharField(max_length=30, null=True)
-    client_description = models.CharField(max_length=200, null=True)
+    client_description = models.TextField(null=True)
     client_firstname = models.CharField(max_length=30, null=True)
     client_middlename =  models.CharField(max_length=30, null=True)
     client_lastname = models.CharField(max_length=30, null=True)
@@ -51,7 +51,7 @@ class Filing(models.Model):
 
 class Issue(models.Model):
     code = models.CharField(max_length=100)
-    specific_issue = models.CharField(max_length=100)
+    specific_issue = models.TextField()
     
     filing = models.ForeignKey(Filing, related_name='issues')
     
@@ -69,7 +69,7 @@ class Lobbyist(models.Model):
     middlename =  models.CharField(max_length=30, null=True)
     lastname = models.CharField(max_length=30)
     suffix = models.CharField(max_length=4, null=True)
-    official_position = models.CharField(max_length=50)
+    official_position = models.CharField(max_length=100)
     raw_name = models.CharField(max_length=100, null=True)
     
     filing = models.ForeignKey(Filing, related_name='lobbyists')
