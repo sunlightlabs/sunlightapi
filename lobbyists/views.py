@@ -12,6 +12,33 @@ def lobbyists_getfiling(params):
     filing = Filing.objects.get(pk=id)
     return filing.to_dict()
 
+@apimethod('lobbyists.getFilingList')
+def lobbyists_getfilinglist(params):
+    """ Run a query against the Filings table based on params
+    """
+    query_params = {}
+    
+    # client/registrant name
+    if 'client_name' in params:
+        query_params['client_name'] = params['client_name']
+    if 'registrant_name' in params:
+        query_params['registrant_name'] = params['registrant_name']
+    
+    # require one or the other
+    if not query_params:
+        raise APIError('client_name or registrant_name must be specified')
+    
+    # add year if specified
+    if 'year' in params:
+        query_params['year'] = params['year']
+    
+    # query filings and convert to dicts
+    filings = Filing.objects.filter(query_params)
+    obj = {'filings': [filing.to_dict() for filing in filings]}
+    
+    return obj
+
+
 @apimethod('lobbyists.search')
 def lobbyists_search(params):
     """ Attempt to match a Lobbyist based on their name

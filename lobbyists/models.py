@@ -40,10 +40,6 @@ class Filing(models.Model):
         fdict['issues'] = [i.to_dict() for i in self.issues.all()]
         fdict['lobbyists'] = [l.to_dict() for l in self.lobbyists.all()]
         return {'filing': fdict}
-    
-    def sopr_url(self):
-        return 'http://soprweb.senate.gov/index.cfm?event=getFilingDetails&filingID=%s' % self.filing_id
-
 
 class Issue(models.Model):
     code = models.CharField(max_length=100)
