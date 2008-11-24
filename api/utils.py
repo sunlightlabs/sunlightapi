@@ -32,6 +32,8 @@ def dict_to_xml(d):
                         for k,v in d.iteritems()])
     elif type(d) == list:
         return ' '.join([dict_to_xml(i) for i in d])
+    elif d is None:
+        return ''
     else:
         return d
     
