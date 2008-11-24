@@ -33,7 +33,7 @@ def lobbyists_getfilinglist(params):
         query_params['year'] = params['year']
     
     # query filings and convert to dicts
-    filings = Filing.objects.filter(query_params)
+    filings = Filing.objects.filter(**query_params)
     obj = {'filings': [filing.to_dict() for filing in filings]}
     
     return obj
