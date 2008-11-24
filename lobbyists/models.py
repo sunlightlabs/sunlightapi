@@ -85,3 +85,4 @@ class Lobbyist(models.Model):
     
 class LobbyistBucket(NameMatchingBucket):
     person = models.ForeignKey(Lobbyist)
+    year = models.IntegerField()

@@ -25,10 +25,11 @@ def lobbyists_search(params):
     name = string.capwords(name)
     # t=0.9 works much better for lobbyists
     threshold = float(params.get('threshold', 0.9))
-    
+    year = int(params.get('year', 2008))
+
     # get buckets from fingerprint
     fingerprint = re.sub('[^A-Z]', '', name)
-    buckets = LobbyistBucket.objects.filter(bucket=fingerprint).select_related()
+    buckets = LobbyistBucket.objects.filter(bucket=fingerprint, year=year).select_related()
     if not buckets and len(fingerprint) > 1:
         buckets = LobbyistBucket.objects.filter(bucket=fingerprint[-1])
         name = name.rsplit(' ', 1)[-1]
