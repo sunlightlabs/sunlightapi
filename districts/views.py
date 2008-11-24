@@ -36,7 +36,7 @@ def district_from_latlong(params):
     try:
         flat, flng = float(lat), float(lng)
     except ValueError:
-        raise ApiError('Latitude & Longitude must be floating-point values')
+        raise APIError('Latitude & Longitude must be floating-point values')
     lat, lng, districts = service.lat_long_to_district(lat, lng)
 
     if len(districts) == 0:
