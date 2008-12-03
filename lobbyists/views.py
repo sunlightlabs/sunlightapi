@@ -82,7 +82,7 @@ def lobbyists_search(params):
                 
                 # check if this lobbyist name+client combo has been seen before
                 unique_fields = (score, lobbyist.firstname, lobbyist.lastname,
-                                 lobbyist.filing.client_name)
+                                 lobbyist.filing.registrant_name)
                 # python 2.5 would use defaultdict here
                 lobbyists.setdefault(unique_fields,[]).append(lobbyist.filing_id)
             else:
@@ -92,11 +92,11 @@ def lobbyists_search(params):
         results = []
         for lobbyist, filings in lobbyists.iteritems():
             # split lobbyist into parts
-            score, firstname, lastname, client_name = lobbyist
+            score, firstname, lastname, registrant_name = lobbyist
             result = {'result': {'score': lobbyist[0],
                                  'lobbyist': {'firstname': lobbyist[1],
                                               'lastname': lobbyist[2],
-                                              'client_name': lobbyist[3],
+                                              'registrant_name': lobbyist[3],
                                               'filings': filings}}}
             results.append(result)
             
