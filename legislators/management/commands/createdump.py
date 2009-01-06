@@ -4,7 +4,7 @@ from types import UnicodeType
 from csv import DictWriter
 from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import ObjectDoesNotExist
-from sunlightapi.api.models import Legislator
+from sunlightapi.legislators.models import Legislator
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list
