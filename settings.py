@@ -69,6 +69,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
 )
 
 ROOT_URLCONF = 'sunlightapi.urls'
@@ -85,6 +86,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.databrowse',
     'django.contrib.flatpages',
+    'django.contrib.redirects',
     'sunlightapi.api',
     'sunlightapi.legislators',
     'sunlightapi.districts',
