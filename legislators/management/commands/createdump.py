@@ -1,9 +1,7 @@
-from optparse import make_option
 import gzip
 from types import UnicodeType
 from csv import DictWriter
 from django.core.management.base import BaseCommand, CommandError
-from django.core.exceptions import ObjectDoesNotExist
 from sunlightapi.legislators.models import Legislator
 
 class Command(BaseCommand):
@@ -23,7 +21,7 @@ class Command(BaseCommand):
                 'gender', 'phone', 'fax', 'website', 'webform', 'email',
                 'congress_office', 'bioguide_id', 'votesmart_id', 'fec_id',
                 'govtrack_id', 'crp_id', 'eventful_id', 'sunlight_old_id',
-                'twitter_id', 'congresspedia_url']
+                'twitter_id', 'congresspedia_url', 'youtube_url']
         writer = DictWriter(gzip.open(filename, 'w'), keys)
         headernames = dict(zip(keys, keys))
         writer.writerow(headernames)

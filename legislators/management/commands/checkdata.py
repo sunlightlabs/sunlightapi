@@ -85,7 +85,8 @@ class Command(BaseCommand):
 
     def check_missing_data(self):
         optional_fields = ('middlename', 'name_suffix', 'nickname', 'email',
-                           'sunlight_old_id', 'eventful_id', 'twitter_id')
+                           'sunlight_old_id', 'eventful_id', 'twitter_id',
+                           'youtube_url')
         for leg in Legislator.objects.all():
             missing = []
             for k,v in leg.__dict__.iteritems():
