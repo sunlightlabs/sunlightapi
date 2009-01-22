@@ -30,7 +30,7 @@ def lobbyists_getfilinglist(params):
     
     # add year if specified
     if 'year' in params:
-        query_params['year'] = params['year']
+        query_params['filing_year'] = params['year']
     
     # query filings and convert to dicts
     filings = Filing.objects.filter(**query_params)
