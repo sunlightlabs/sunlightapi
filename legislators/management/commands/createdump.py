@@ -21,7 +21,8 @@ class Command(BaseCommand):
                 'gender', 'phone', 'fax', 'website', 'webform', 'email',
                 'congress_office', 'bioguide_id', 'votesmart_id', 'fec_id',
                 'govtrack_id', 'crp_id', 'eventful_id', 'sunlight_old_id',
-                'twitter_id', 'congresspedia_url', 'youtube_url']
+                'twitter_id', 'congresspedia_url', 'youtube_url', 
+                'official_rss']
         writer = DictWriter(gzip.open(filename, 'w'), keys)
         headernames = dict(zip(keys, keys))
         writer.writerow(headernames)
