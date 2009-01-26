@@ -116,10 +116,12 @@ class Command(BaseCommand):
                 print '%s %s (%s)' % (leg.firstName, leg.lastName,
                                       leg.candidateId)
                 if add:
-                    self.add_legislator(leg)
+                    bioguide = raw_input('Bioguide ID ')
+                    if bioguide:
+                        self.add_legislator(leg, bioguide_id=bioguide)
                 
 
-    def add_legislator(self, official):
+    def add_legislator(self, official, bioguide_id):
         person = {}
         # get basic information
         id = person['votesmart_id'] = official.candidateId
@@ -159,8 +161,9 @@ class Command(BaseCommand):
             pass
 
         # get information from bio
-        bio = votesmart.candidatebio.getBio(id)
-        person['gender'] = bio.gender[0]
+        bio = votesmart.candidatebio.getBio(id) 
+        if bio.gender:
+            person['gender'] = bio.gender[0]
         person['fec_id'] = bio.fecId
         
         try:
@@ -172,7 +175,7 @@ class Command(BaseCommand):
         except ObjectDoesNotExist:
             pass
         
-        # person['bioguide_id'] =
+        person['bioguide_id'] = bioguide_id
         # person['crp_id'] =
         # person['govtrack_id'] =
         # person['twitter_id'] =
