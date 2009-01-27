@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     (r'^api/', include('sunlightapi.api.urls')),
     (r'^api/admin/(.*)', admin.site.root),
     (r'^api/databrowse/(.*)', databrowse.site.root),
+    (r'^api/words/', include('words.urls')),
 )
 
 # currently need views to be imported so that their urls can be inserted
