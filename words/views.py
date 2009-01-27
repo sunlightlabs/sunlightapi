@@ -1,19 +1,30 @@
+import string 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseForbidden
 from sunlightapi.api.models import ApiUser
 from sunlightapi.words.models import WordList
 from django.shortcuts import get_object_or_404
+from django.utils.functional import wraps
 
-def word_list(request, list_name):
+MAX_WORDLIST_BYTES = 5000
 
-    # get the user who is calling the service
-    try:
-        apikey = request.REQUEST['apikey']
-        apiuser = ApiUser.objects.get(api_key=apikey, status='A')
-    except KeyError:
-        return HttpResponseForbidden('Missing API Key')
-    except ObjectDoesNotExist:
-        return HttpResponseForbidden('Invalid API Key')
+def with_apiuser(func):
+    def wrapper(request, *args, **kwargs):
+        # get the user who is calling the service
+        try:
+            apikey = request.REQUEST['apikey']
+            apiuser = ApiUser.objects.get(api_key=apikey, status='A')
+        except KeyError:
+            return HttpResponseForbidden('Missing API Key')
+        except ObjectDoesNotExist:
+            return HttpResponseForbidden('Invalid API Key')
+
+        return func(request, apiuser=apiuser, *args, **kwargs)
+    wrapper = wraps(func)(wrapper)
+    return wrapper
+
+@with_apiuser
+def word_list(request, apiuser, list_name):
 
     # if method is GET, return a simple listing
     if request.method == 'GET':
@@ -23,6 +34,10 @@ def word_list(request, list_name):
     elif request.method == 'POST':
         delimiter = request.POST.get('delimiter', '\n')
         words = request.POST['words']
+
+        if len(words) > MAX_WORDLIST_BYTES:
+            return HttpResponseForbidden('wordlist exceeds %s character limit'
+                                         % MAX_WORDLIST_BYTES)
 
         # check permissions before updating
         try:
@@ -42,4 +57,15 @@ def word_list(request, list_name):
 
     return HttpResponse('~'.join(wordlist.word_list), mimetype='text/plain')
 
+@with_apiuser
+def remove_stopwords(request, apiuser, list_name):
+
+    # converting to a set yielded great results
+    wordlist = set(get_object_or_404(WordList, slug=list_name).word_list)
+
+    text = str(request.POST['text'])
+    text = string.translate(text, string.maketrans('',''), string.punctuation)
+    text = ' '.join([w for w in text.lower().split() if w not in wordlist])
+
+    return HttpResponse(text, mimetype='text/plain')
 

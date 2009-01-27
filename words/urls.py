@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('',
-    (r'^wordlist/(?P<list_name>\w+)/$', 'words.views.word_list'),
+urlpatterns = patterns('words.views',
+    (r'^wordlist/(?P<list_name>\w+)/$', 'word_list'),
+    (r'^remove_stopwords/(?P<list_name>\w+)/$', 'remove_stopwords'),
 )
 
