@@ -42,11 +42,11 @@ def lobbyists_getfilinglist(params):
 @apimethod('lobbyists.search')
 def lobbyists_search(params):
     """ Attempt to match a Lobbyist based on their name
-    
+
         * use initials to get a bucket
         * find via string matching algorithm and attempt to group by name
     """
-    
+
     # handle name & threshold params
     name = re.sub('[^a-zA-Z ]', '', params['name'])
     name = string.capwords(name)
@@ -58,9 +58,9 @@ def lobbyists_search(params):
     fingerprint = re.sub('[^A-Z]', '', name)
     buckets = LobbyistBucket.objects.filter(bucket=fingerprint, year=year).select_related()
     if not buckets and len(fingerprint) > 1:
-        buckets = LobbyistBucket.objects.filter(bucket=fingerprint[-1])
+        buckets = LobbyistBucket.objects.filter(bucket=fingerprint[-1], year=year)
         name = name.rsplit(' ', 1)[-1]
-        
+
     if buckets:
         # score names against uppercased name
         name = name.upper()
@@ -68,18 +68,18 @@ def lobbyists_search(params):
         # but should still be valuable as it allows us to use a break in the
         # first for loop.
         scores = sorted([(score_match(name, bucket), bucket) for bucket in buckets], reverse=True)
-        
+
         # store list of results and seen lobbyists
         lobbyists = dict() #defaultdict(list)
-        
+
         # run a pass over scores, grouping by unique name/clientname
         for score, bucket in scores:
             # only turn lobbyists into results while score > threshold
             if score > threshold:
-                
+
                 # get lobbyist with client & filing_id
                 lobbyist = bucket.person
-                
+
                 # check if this lobbyist name+client combo has been seen before
                 unique_fields = (score, lobbyist.firstname, lobbyist.lastname,
                                  lobbyist.filing.registrant_name)
