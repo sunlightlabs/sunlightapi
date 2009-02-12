@@ -6,7 +6,7 @@ import datetime
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
-        make_option('--email-unactivated', action='store_true', dest='email',
+        make_option('--email', action='store_true', dest='email',
                     default=False, help='Email Unactivated Users'),)
     help = "check user statistics"
     args = ""
@@ -28,7 +28,7 @@ class Command(BaseCommand):
         if email:
             for u in ApiUser.objects.filter(status='U'):
                 last_email = u.last_email_sent - datetime.datetime.now()
-                if last_email > datetime.timedelta(days=30):
+                if last_email < datetime.timedelta(days=-30):
                     body = '''Hi,
         We noticed that you signed up for a Sunlight Labs API Key on %s-%s-%s and haven't activated it.
 
