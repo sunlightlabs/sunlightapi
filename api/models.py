@@ -43,6 +43,7 @@ class ApiUser(models.Model):
     usage = models.TextField('Intended Usage', blank=True)
 
     signup_time = models.DateTimeField(auto_now_add=True)
+    last_email_sent = models.DateTimeField()
     status = models.CharField(max_length=1, choices=KEY_STATUS, default='U')
 
     def active(self):

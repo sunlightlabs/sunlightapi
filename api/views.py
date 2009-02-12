@@ -10,6 +10,7 @@ def register(request):
         if form.is_valid():
             newuser = form.save(commit=False)
             newuser.api_key = md5.new(newuser.email + 'sunlightapi').hexdigest()
+            newuser.last_email_sent = newuser.signup_time
             newuser.save()
             message = '''Thank you for registering for a Sunlight Labs API Key.
 
