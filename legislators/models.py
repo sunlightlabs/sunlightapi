@@ -58,6 +58,7 @@ class Legislator(models.Model):
 
     # other info
     gender = models.CharField(max_length=1, choices=GENDERS)
+    senate_class = models.CharField(max_length=3)
 
     # other site ids
     sunlight_old_id = models.CharField(max_length=20, blank=True)
