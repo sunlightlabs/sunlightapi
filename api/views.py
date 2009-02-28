@@ -2,6 +2,7 @@ import md5
 from django.shortcuts import render_to_response
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
+import datetime
 from sunlightapi.api.models import LogEntry, ApiUser, ApiUserForm
 
 def register(request):
@@ -10,7 +11,7 @@ def register(request):
         if form.is_valid():
             newuser = form.save(commit=False)
             newuser.api_key = md5.new(newuser.email + 'sunlightapi').hexdigest()
-            newuser.last_email_sent = newuser.signup_time
+            newuser.last_email_sent = datetime.datetime.now()
             newuser.save()
             message = '''Thank you for registering for a Sunlight Labs API Key.
 
