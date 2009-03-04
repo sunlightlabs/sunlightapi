@@ -55,7 +55,7 @@ class ApiUser(models.Model):
 class ApiUserForm(ModelForm):
     class Meta:
         model = ApiUser
-        exclude = ('api_key', 'signup_time', 'status')
+        exclude = ('api_key', 'signup_time', 'status', 'last_email_sent')
 
     def clean_email(self):
         if ApiUser.objects.filter(email=self.cleaned_data['email']).count():
