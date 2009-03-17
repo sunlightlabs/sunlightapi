@@ -72,8 +72,9 @@ def apimethod(method_name):
             params = {}
             metadata = request.GET.get('metadata', None)
             apikey = request.GET.get('apikey', None)
+            jsonp = request.GET.get('jsonp', None)
             for key,val in request.GET.lists():
-                if key not in ('metadata', 'apikey'):
+                if key not in ('metadata', 'apikey', 'jsonp'):
                     # unlistify single items
                     if len(val) == 1:
                         params[str(key)] = val[0]
@@ -131,7 +132,11 @@ def apimethod(method_name):
                     mimetype = 'application/xml'
                 else:
                     response = simplejson.dumps(response)
-                    mimetype = 'application/json'
+                    if jsonp:
+                        response = '%s(%s)' % (jsonp, response)
+                        mimetype = 'text/javascript'
+                    else:
+                        mimetype = 'application/json'
 
                 return HttpResponse(response, mimetype)
             else:
