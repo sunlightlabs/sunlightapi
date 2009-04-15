@@ -6,7 +6,8 @@ from sunlightapi.legislators.models import Legislator, LegislatorBucket
 from sunlightapi.districts.models import ZipDistrict
 from sunlightapi.api.utils import apimethod, APIError, score_match
 
-RE_TITLES = re.compile('((Congress(wo)?man)|(Sen((ator)|\.)?)|(Rep((resentative)|(\.))?))\s+')
+RE_TITLES = re.compile(r'((Congress(wo)?man)|(Sen((ator)|\.)?)|(Rep((resentative)|(\.))?))\s+')
+RE_SUFFIX = re.compile(r'\b(Jr|Junior|Ii|Iii|Iv)\b')
 
 @apimethod('legislators.get')
 def legislators_get(params):
@@ -71,6 +72,7 @@ def legislators_search(params):
     threshold = float(params.get('threshold', 0.8))
 
     name = RE_TITLES.sub('', name)
+    name = RE_SUFFIX.sub('', name)
     fingerprint = re.sub('[^A-Z]', '', name)
 
     buckets = LegislatorBucket.objects.filter(bucket=fingerprint).select_related()
@@ -89,3 +91,5 @@ def legislators_search(params):
         return {'results': results}
     else:
         return {'results': []}
+
+
