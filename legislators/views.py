@@ -2,7 +2,7 @@ import re
 import string
 from polipoly import AddressToDistrictService
 from django.core.exceptions import ObjectDoesNotExist
-from sunlightapi.legislators.models import Legislator, LegislatorBucket
+from sunlightapi.legislators.models import Legislator, LegislatorBucket, Committee
 from sunlightapi.districts.models import ZipDistrict
 from sunlightapi.api.utils import apimethod, APIError, score_match
 
@@ -93,3 +93,42 @@ def legislators_search(params):
         return {'results': []}
 
 
+@apimethod('committees.get')
+def committees_get(params):
+    """ Get details for a committee, including subcommittees and legislators. """
+    com_id = params['id']
+    committee = Committee.objects.get(pk=com_id)
+    result = {'committee': committee.__dict__,
+              'subcommittees': [{'committee': c.__dict__} for c in committee.subcommittees.all()],
+              'members': [{'legislator': m.__dict__} for m in committee.members.all()]}
+    return result
+
+@apimethod('committees.getList')
+def committees_getlist(params):
+    """ Get a list of legislators for a chamber or committee.
+
+        If chamber is specified then all top level committees are returned.
+        If committee is specified then all subcommittees are returned.
+    """
+
+    chamber = params.get('chamber')
+    committee = params.get('committee')
+    
+    if chamber and committee:
+        raise APIError('must specify chamber OR committee parameter')
+    elif chamber:
+        committees = Committee.objects.filter(chamber=chamber, parent=None)
+    elif committee:
+        committees = Committee.objects.filter(parent=committee)
+    else:
+        raise APIError('must specify chamber or committee parameter')
+
+    return {'committees': [{'committee': c.__dict__} for c in committees]}
+
+@apimethod('committees.allForLegislator')
+def committees_allforlegislator(params):
+    """ Get a listing of all committees that a legislator belongs to """
+    bioguide_id = params['bioguide_id']
+    legislator = Legislator.objects.get(pk=bioguide_id)
+    committees = legislator.committees.all()
+    return {'committees': [{'committee': c.__dict__} for c in committees]}

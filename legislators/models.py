@@ -82,3 +82,14 @@ class Legislator(models.Model):
 
 class LegislatorBucket(NameMatchingBucket):
     person = models.ForeignKey(Legislator)
+
+CHAMBERS = (('House', 'House'),('Senate','Senate'))
+
+class Committee(models.Model):
+    chamber = models.CharField(max_length=6, choices=CHAMBERS)
+    parent = models.ForeignKey('self', related_name='subcommittees', null=True)
+    name = models.CharField(max_length=300)
+    members = models.ManyToManyField(Legislator, related_name='committees')
+
+    def __unicode__(self):
+        return self.name
