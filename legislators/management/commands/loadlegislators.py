@@ -29,9 +29,13 @@ class Command(BaseCommand):
         for line in csvfile:
             line['in_office'] = (line['in_office'] == '1')
             bioguide = line['bioguide_id']
-            leg = all_legislators[bioguide]
-            dictdiff(leg.__dict__, line)
-            if save:
-                leg.__dict__.update(line)
-                leg.save()
-
+            leg = all_legislators.get(bioguide)
+            if leg:
+                dictdiff(leg.__dict__, line)
+                if save:
+                    leg.__dict__.update(line)
+                    leg.save()
+            else:
+                print 'new legislator %s %s (%s)' % (line['firstname'], line['lastname'], line['bioguide_id'])
+                if save:
+                    Legislator.objects.create(**line)
