@@ -1,14 +1,15 @@
+import csv
 from sunlightapi.legislators.models import Committee, Legislator
 from django.db.models import Q
 
-lines = open('committees.csv').readlines()
+lines = csv.reader(open('committees.csv'))
 parent = None
 
 problems = set()
 
-for line in lines:
-    data = line.split('","')
-    coms = data[0].replace('"', '').split('/')
+for data in lines:
+    coms = data[0].split('/')
+#    acronym = data[1]
     com = coms[-1]
     chamber = coms[0].split(' ')[0]
     if len(coms) == 1:
@@ -16,9 +17,7 @@ for line in lines:
     committee = Committee.objects.create(chamber=chamber, parent=parent, name=com)
     if len(coms) == 1:
         parent = committee
-    members = data[1:]
-    if members:
-        members[-1] = members[-1].replace(',', '').replace('"','').strip()
+    members = data[2:]
     for member in members:
         if member.strip():
             split = member.strip().split(' ')
@@ -27,8 +26,18 @@ for line in lines:
             if lname in ('Jr.','IV'):
                 lname = split[-2]
             lname = lname.replace('_', ' ')
-            titles = ['Sen'] if chamber == 'Senate' else ['Rep', 'Com', 'Del']
+
+            # possible titles
+            if chamber == 'Senate':
+                titles = ['Sen']
+            elif chamber == 'House':
+                titles = ['Rep', 'Com', 'Del']
+            else:
+                titles = ['Rep', 'Sen', 'Com', 'Del']
+
             legislators = Legislator.objects.filter(lastname=lname, title__in=titles)
+
+            # handle errors
             if len(legislators) == 0:
                 problems.add('no legislator named %s _%s_ [%s,%s]' % (fname, lname, committee, committee.id))
             elif len(legislators) > 1:
