@@ -2,6 +2,7 @@ import re
 import string
 from polipoly import AddressToDistrictService
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.datastructures import SortedDict
 from sunlightapi.legislators.models import Legislator, LegislatorBucket, Committee
 from sunlightapi.districts.models import ZipDistrict
 from sunlightapi.api.utils import apimethod, APIError, score_match
@@ -92,15 +93,30 @@ def legislators_search(params):
     else:
         return {'results': []}
 
+def _com_to_dict(com):
+    """ convert committee into a suitable dict for output """
+    od = SortedDict(com.__dict__)
+    od.pop('parent_id')
+    return od
+
+def _chain_subcommittees(committee_list):
+    """ collapse subcommittees in a list under their parent committee """
+    results = {}
+    for c in committee_list:
+        if c.parent_id:
+            results[c.parent_id].setdefault('subcommittees', []).append({'committee': _com_to_dict(c)})
+        else:
+            results[c.id] = _com_to_dict(c)
+    return results.values()
 
 @apimethod('committees.get')
 def committees_get(params):
     """ Get details for a committee, including subcommittees and legislators. """
     com_id = params['id']
     committee = Committee.objects.get(pk=com_id)
-    result = {'committee': committee.__dict__,
-              'subcommittees': [{'committee': c.__dict__} for c in committee.subcommittees.all()],
-              'members': [{'legislator': m.__dict__} for m in committee.members.all()]}
+    result = {'committee': _com_to_dict(committee)}
+    result['committee']['subcommittees'] = [{'committee': _com_to_dict(c)} for c in committee.subcommittees.all()]
+    result['committee']['members'] = [{'legislator': m.__dict__} for m in committee.members.all()]
     return result
 
 @apimethod('committees.getList')
@@ -110,25 +126,15 @@ def committees_getlist(params):
         If chamber is specified then all top level committees are returned.
         If committee is specified then all subcommittees are returned.
     """
-
-    chamber = params.get('chamber')
-    committee = params.get('committee')
-    
-    if chamber and committee:
-        raise APIError('must specify chamber OR committee parameter')
-    elif chamber:
-        committees = Committee.objects.filter(chamber=chamber, parent=None)
-    elif committee:
-        committees = Committee.objects.filter(parent=committee)
-    else:
-        raise APIError('must specify chamber or committee parameter')
-
-    return {'committees': [{'committee': c.__dict__} for c in committees]}
+    chamber = params['chamber']
+    committees = Committee.objects.filter(chamber=chamber)
+    results = _chain_subcommittees(committees)
+    return {'committees': [{'committee': c} for c in results]}
 
 @apimethod('committees.allForLegislator')
 def committees_allforlegislator(params):
     """ Get a listing of all committees that a legislator belongs to """
     bioguide_id = params['bioguide_id']
     legislator = Legislator.objects.get(pk=bioguide_id)
-    committees = legislator.committees.all()
-    return {'committees': [{'committee': c.__dict__} for c in committees]}
+    results = _chain_subcommittees(legislator.committees.all())
+    return {'committees': [{'committee': c} for c in results]}

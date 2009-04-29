@@ -86,6 +86,7 @@ class LegislatorBucket(NameMatchingBucket):
 CHAMBERS = (('House', 'House'),('Senate','Senate'))
 
 class Committee(models.Model):
+    id = models.CharField(max_length=8, primary_key=True)
     chamber = models.CharField(max_length=6, choices=CHAMBERS)
     parent = models.ForeignKey('self', related_name='subcommittees', null=True)
     name = models.CharField(max_length=300)

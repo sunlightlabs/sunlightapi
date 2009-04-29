@@ -9,12 +9,12 @@ problems = set()
 
 for data in lines:
     coms = data[0].split('/')
-#    acronym = data[1]
+    com_id = data[1]
     com = coms[-1]
     chamber = coms[0].split(' ')[0]
     if len(coms) == 1:
         parent = None
-    committee = Committee.objects.create(chamber=chamber, parent=parent, name=com)
+    committee = Committee.objects.create(id=com_id, chamber=chamber, parent=parent, name=com)
     if len(coms) == 1:
         parent = committee
     members = data[2:]
@@ -51,9 +51,9 @@ for data in lines:
             else:
                 committee.members.add(legislators[0])
 
-additions = {'R000572': (25,36,38,39,59),
-             'R000575': (1,2,6,21,23,100,101,105),
-             'Y000031': (11,18,8)}
+additions = {'R000572': ('HSIF', 'HSIF_cti', 'HSIF_hth', 'HSIG'),
+             'R000575': ('HSAG', 'HSAG_ene', 'HSAG_ldp', 'HSAS', 'HSAS_rdi', 'HSAS_osi', 'HSHM', 'HSHM_bor', 'HSHM_cpr'),
+             'Y000031': ('HSAP', 'HSAP_def', 'HSAP_dva')}
 
 for problem in problems:
     print problem
