@@ -27,10 +27,10 @@ def dict_to_xml(d):
         '<html><ul><li>uno</li><li>dos</li><li>tres</li></ul></html>'
     """
 
-    if type(d) == dict:
+    if isinstance(d, dict):
         return ''.join(['<%s>%s</%s>' % (k,dict_to_xml(v),k)
                         for k,v in d.iteritems()])
-    elif type(d) == list:
+    elif isinstance(d, list):
         return ' '.join([dict_to_xml(i) for i in d])
     elif d is None:
         return ''
