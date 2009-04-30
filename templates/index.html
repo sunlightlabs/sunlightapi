@@ -18,8 +18,6 @@
     <li>Ask questions/show off your project on the <a href="http://groups.google.com/group/sunlightlabs-api-discuss">Sunlight API Google Group</a></li>
 </ol>
 
-
-
 <h2> Updates </h2>
 
 <div id="twitter_div">
@@ -51,30 +49,35 @@ Use of the Sunlight Labs API is subject to the following terms:
 
 <h2>About the Data</h2>
 
-<p>Our data comes from a variety of sources and updated regularly, a list of all sources with their update dates are listed below.</p>
+<p>Our data comes from a variety of sources and updated regularly.</p>
 
 <table>
-    <thead><tr><th>Source</th><th>Last Update</th></tr></thead>
+    <thead><tr><th>Source</th></tr></thead>
     <tbody>
     {% for source in sources %}
-    <tr><td><a href="{{source.url}}">{{source.name}}</a></td><td>{{source.last_update}}</td></tr>
+    <tr><td><a href="{{source.url}}">{{source.name}}</a></td></tr>
     {% endfor %}
     </tbody>
 </table>
 
 <p>To find out specific details about what sources were involved in the data from any given call append the metadata=true option onto the parameters of any function call.  </p>
 
+<h3>Latest Updates</h3>
+<ul id="latest_commits">
+    <li>...loading from github...</li>
+</ul>
+
 <h3>Download All Data</h3>
 
-<p>Occasionally we make a dump of all of the data in the API for those users that are best served by a full copy of this data.  If you are making heavy use of the API, particularly in an application that involves pulling in nearly all of the information the API provides it is recommended that you use this archive.<p>
+<p>We provide a dump of all of the data in the API for those users that are best served by a full copy of this data.  If you are making heavy use of the API, particularly in an application that involves pulling in nearly all of the information the API provides it is recommended that you use this archive.  This dump is always synced to the latest data in the API.<p>
 
 <ul>
-<li><a href="/api/media/apidump.csv.gz">Latest Sunlight Labs API Legislator Dump</a> updated January 6th (initial import of 111th)</li>
+<li><a href="http://github.com/sunlightlabs/apidata/raw/master/legislators/legislators.csv">Latest Sunlight Labs API Legislator Dump</a></li>
 </ul>
 
 <a name="photos"></a>
 
-<h3>Photos of the 110th Congress</h3>
+<h3>Photos of the 111th Congress</h3>
 
 <p>We also have taken the effort to compile all of the images of Members of Congress into an archive.  The following two archives are provided for convenience with images pulled from the <a href="http://www.gpoaccess.gov/cdirectory/index.html">Congressional Directory</a>.</p>
 
@@ -102,5 +105,17 @@ available in the <a href="/api/docs/transition_guide/">transition guide</a>.)</p
 
 <script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
 <script type="text/javascript" src="http://twitter.com/statuses/user_timeline/sunlightlabsapi.json?callback=twitterCallback2&amp;count=5"></script>
+<script type="text/javascript">
+    function latest_commits(resp) { 
+        var html = '';
+        for(var i=0; i < resp.commits.length; ++i) {
+            var commit = resp.commits[i];
+            html += ('<li><a href="' + commit.url + '">' + commit.message + '</a> [' + commit.committed_date.substr(0,10) + ']</li>\n');
+        }
+        document.getElementById('latest_commits').innerHTML = html;
+    }
+</script>
+<script type="text/javascript" src="http://github.com/api/v2/json/commits/list/sunlightlabs/apidata/master/legislators/legislators.csv?callback=latest_commits"></script>
+
 
 {% endblock content %}
