@@ -45,7 +45,7 @@ class Command(BaseCommand):
         # fill all the buckets
         if legislators:
             LegislatorBucket.objects.all().delete()
-            for leg in Legislator.objects.all():
+            for leg in Legislator.all_legislators.all():
                 print leg
                 create_buckets(leg, LegislatorBucket)
 

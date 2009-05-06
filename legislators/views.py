@@ -71,6 +71,7 @@ def legislators_search(params):
     name = re.sub('[^a-zA-Z ]', '', params['name'])
     name = string.capwords(name)
     threshold = float(params.get('threshold', 0.8))
+    all_legislators = bool(params.get('all_legislators', 0))
 
     name = RE_TITLES.sub('', name)
     name = RE_SUFFIX.sub('', name)
@@ -89,7 +90,8 @@ def legislators_search(params):
         results = []
         seen_people = set()
         for score, bucket in scores:
-            if score > threshold and bucket.person.bioguide_id not in seen_people:
+            # score high enough, hasn't been seen, in office unless we're looking for everyone
+            if score > threshold and bucket.person.bioguide_id not in seen_people and (bucket.person.in_office or all_legislators):
                 results.append({'result': {'score': score, 'legislator': bucket.person.__dict__}})
                 seen_people.add(bucket.person.bioguide_id)
 
