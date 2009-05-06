@@ -86,8 +86,12 @@ def legislators_search(params):
     # get sorted list of scores, and filter those below threshold
     if buckets:
         scores = sorted([(score_match(name, bucket), bucket) for bucket in buckets], reverse=True)
-        results = [{'result': {'score': score, 'legislator': bucket.person.__dict__}}
-            for score,bucket in scores if score > threshold]
+        results = []
+        seen_people = set()
+        for score, bucket in scores:
+            if score > threshold and bucket.person.bioguide_id not in seen_people:
+                results.append({'result': {'score': score, 'legislator': bucket.person.__dict__}})
+                seen_people.add(bucket.person.bioguide_id)
 
         return {'results': results}
     else:
