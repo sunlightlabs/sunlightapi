@@ -20,6 +20,7 @@ MANAGERS = ADMINS
 EMAIL_SUBJECT_PREFIX = '[Sunlight API] '
 
 CD_SHAPEFILE = ROOT('congdist/cd99_110')
+STATE_SHAPEFILE_DIR = ROOT('congdist/states')
 
 DATABASE_ENGINE = 'sqlite3'
 DATABASE_NAME = ROOT('apidata.sqlite3')

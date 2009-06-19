@@ -1,4 +1,4 @@
-from polipoly import AddressToDistrictService
+from polipoly import AddressToDistrictService, AddressToStateDistrictService
 from sunlightapi.districts.models import ZipDistrict
 from sunlightapi.api.utils import apimethod, APIError
 from sunlightapi import settings
@@ -44,5 +44,25 @@ def district_from_latlong(params):
 
     objs = [{'district': {'state': d[0], 'number': d[1]}} for d in districts]
     obj = {'districts': objs}
+
+    return obj
+
+@apimethod('districts.getStateDistrictsFromLatLong')
+def state_districts_from_latlong(params):
+    """ Return state level district that a lat/long coordinate pair falls within """
+    lat = params['latitude']
+    lng = params['longitude']
+
+    service = AddressToStateDistrictService(settings.STATE_SHAPEFILE_DIR)
+    try:
+        flat, flng = float(lat), float(lng)
+    except ValueError:
+        raise APIError('Latitude & Longitude must be floating-point values')
+    lat, lng, districts = service.lat_long_to_district(lat, lng)
+
+    if len(districts) == 0:
+        raise APIError('Point not within state districts.')
+
+    obj = {'districts': [{'district': d} for d in districts]}
 
     return obj
