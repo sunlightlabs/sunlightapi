@@ -71,7 +71,7 @@ class LogEntry(models.Model):
 
     caller_key = models.ForeignKey(ApiUser)
     caller_ip = models.IPAddressField()
-    caller_host = models.CharField(max_length=100,null=True)
+    #caller_host = models.CharField(max_length=100,null=True)
     is_ajax = models.BooleanField()
     query_string = models.CharField(max_length=200,null=True)
     
