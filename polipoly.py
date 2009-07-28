@@ -305,7 +305,7 @@ class AddressToDistrictService(object):
         for cb in self.boundaries:
             if cb.contains((flng,flat)):
                 if cb.district == '98':
-                    cb.district = '00'
+                    cb.district = '0'
                 elif cb.district[0] == '0':
                     cb.district = cb.district[1]
                 districts.append((cb.state, cb.district))
