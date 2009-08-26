@@ -9,11 +9,10 @@ District boundaries.
 """
 
 __author__ = "James Turk (james.p.turk@gmail.com)"
-__version__ = "0.3.0"
-__copyright__ = "Copyright (c) 2007-2009 Sunlight Labs"
+__version__ = "0.1.5"
+__copyright__ = "Copyright (c) 2007-2008 Sunlight Labs"
 __license__ = "BSD"
 
-import os
 import urllib
 from shapelib import ShapeFile
 from dbflib import DBFFile
@@ -122,11 +121,11 @@ FIPS_TO_STATE = {
 class Entity(object):
     """ A named list of polygons associated with a political boundary.
 
-        eg. a state, congressional district, or school district
-    """
-    def __init__(self, name, lsad, vertices, extents):
+        eg. a state, congressional district, or school district"""
+
+    def __init__(self, name, entity, vertices, extents):
         self.name = name
-        self.lsad = lsad
+        self.entity = entity
         self.polygons = [Polygon(vlist) for vlist in vertices]
         self.extents = extents
 
@@ -137,18 +136,15 @@ class Entity(object):
 
         # by using the LSAD determine if a subclass is defined for this entity
         lsad_mapping = {
-            ('00', '01'): State,
-            ('C1', 'C2', 'C3', 'C4'): CongressDistrict,
-            ('L1', 'L2', 'L7', 'LU'): StateUpperDistrict,
-            ('L3', 'L4', 'L5', 'L6', 'L7', 'LL'): StateLowerDistrict
+            ('01'): State,
+            ('C1', 'C2', 'C3', 'C4'): CongressDistrict
         }
-
         for lsads, cls in lsad_mapping.iteritems():
             if rec['LSAD'] in lsads:
                 return cls.from_shapefile(obj, rec)
 
         # if there is no mapping for the LSAD just construct a Entity
-        return Entity('', rec['LSAD'], obj.vertices(), obj.extents())
+        return Entity('', rec['LSAD_TRANS'], obj.vertices(), obj.extents())
 
     def in_rect(self, point):
         """ Check if a point lies within the bounding extents of the entity """
@@ -169,55 +165,41 @@ class Entity(object):
 <MultiGeometry>%s</MultiGeometry>
 </Placemark>""" % (self.name, ''.join(poly.to_kml() for poly in self.polygons))
 
+class CongressDistrict(Entity):
+    """ Entity with state and district properties. """
+
+    def __init__(self, entity, vertices, extents, state, district):
+        Entity.__init__(self, '%s-%s' % (state, district),
+                                entity, vertices, extents)
+        self.state = state
+        self.district = district
+
+    @staticmethod
+    def from_shapefile(obj, rec):
+        """ Construct a CongressDistrict from a census.gov shapefile """
+        return CongressDistrict(rec['LSAD_TRANS'], obj.vertices(),
+                                obj.extents(), FIPS_TO_STATE[rec['STATE']],
+                                rec['CD'])
+
 class State(Entity):
     """ Entity for states, adds a state property """
 
-    def __init__(self, lsad, vertices, extents, state_fips, state):
-        Entity.__init__(self, state, lsad, vertices, extents)
-        self.state_fips = state_fips
+    def __init__(self, vertices, extents, state):
+        Entity.__init__(self, 'State', state, vertices, extents)
         self.state = state
 
     @staticmethod
     def from_shapefile(obj, rec):
         """ Construct a State from a census.gov shapefile """
-        return State(rec['LSAD'], obj.vertices(), obj.extents(), rec['STATEFP'], rec['NAME'])
+        return State(obj.vertices(), obj.extents(), rec['NAME'])
 
-class District(Entity):
-    """ Entity with state and district properties. """
-
-    def __init__(self, lsad, vertices, extents, state_fips, district):
-        Entity.__init__(self, '%s-%s' % (FIPS_TO_STATE[state_fips], district), lsad,
-                        vertices, extents)
-        self.state_fips = state_fips
-        self.state = FIPS_TO_STATE[state_fips]
-        self.district = district
-
-class CongressDistrict(District):
-    @staticmethod
-    def from_shapefile(obj, rec):
-        """ Construct a CongressDistrict from a census.gov shapefile """
-        return CongressDistrict(rec['LSAD'], obj.vertices(), obj.extents(),
-                                rec['STATEFP'], rec['CDFP'])
-
-class StateLowerDistrict(District):
-    @staticmethod
-    def from_shapefile(obj, rec):
-        return StateLowerDistrict(rec['LSAD'], obj.vertices(), obj.extents(),
-                                  rec['STATEFP'], rec['SLDLST'])
-
-class StateUpperDistrict(District):
-    @staticmethod
-    def from_shapefile(obj, rec):
-        return StateUpperDistrict(rec['LSAD'], obj.vertices(), obj.extents(),
-                                  rec['STATEFP'], rec['SLDUST'])
-
-
-def read_census_shapefile(filename, entity_type=Entity):
+def read_census_shapefile(filename):
     """Read census shapefile and return list of entity-derived objects.
 
     Given the base name of a census .shp/.dbf file returns a list of all
     Entity-derived objects described by the the file.
     """
+
     try:
         shp = ShapeFile(filename)
     except IOError:
@@ -228,7 +210,6 @@ def read_census_shapefile(filename, entity_type=Entity):
     except IOError:
         raise ShapefileError('Could not open %s.dbf' % filename)
 
-    # shp.info()[0] is the number of objects
     shape_count = shp.info()[0]
 
     # shape_count should always equal dbf.record_count()
@@ -236,8 +217,14 @@ def read_census_shapefile(filename, entity_type=Entity):
         raise ShapefileError('SHP/DBF record count mismatch (SHP=%d, DBF=%d)' %
                                 (shape_count, dbf.record_count()))
 
-    return [entity_type.from_shapefile(shp.read_object(i), dbf.read_record(i))
+    # generator version
+    #for i in xrange(shp.info()[0]):
+    #    yield Entity.fromShapefile(shp.read_object(i), dbf.read_record(i))
+
+    # shp.info()[0] is the number of objects
+    return [Entity.from_shapefile(shp.read_object(i), dbf.read_record(i))
             for i in xrange(shape_count)]
+
 
 ### Geocoding ###
 
@@ -323,50 +310,3 @@ class AddressToDistrictService(object):
             lat, lng = self._geocoderus_geocode(address)
 
         return self.lat_long_to_district(lat, lng)
-
-def dist_name_to_dict(name, chamber):
-    state, dist = name.split('-')
-    return {'state':state, 'chamber':chamber, 'number':int(dist)}
-
-class AddressToStateDistrictService(object):
-    def __init__(self, shapefile_dir):
-        self.shapefile_dir = shapefile_dir
-        self.states = read_census_shapefile(os.path.join(shapefile_dir, 'fe_2007_us_state'))
-
-    def lat_long_to_district(self, lat, lng):
-        """ Obtain the district containing a given latitude and longitude."""
-        loc = (-abs(float(lng)), float(lat))
-        districts = []
-        for state in self.states:
-            if state.contains(loc):
-
-                # congressional districts
-#                cds = read_census_shapefile('cdists/cd110/fe_2007_%s_cd110' % state.state_fips)
-#                for cd in cds:
-#                    if cd.contains(loc):
-#                        districts.append(dist_name_to_dict(cd.name))
-
-                lds = read_census_shapefile(os.path.join(self.shapefile_dir, 'lower/fe_2007_%s_sldl' % state.state_fips), StateLowerDistrict)
-                for ld in lds:
-                    if ld.contains(loc):
-                        districts.append(dist_name_to_dict(ld.name, 'lower'))
-
-                uds = read_census_shapefile(os.path.join(self.shapefile_dir, 'upper/fe_2007_%s_sldu' % state.state_fips), StateUpperDistrict)
-                for ud in uds:
-                    if ud.contains(loc):
-                        districts.append(dist_name_to_dict(ud.name, 'upper'))
-        return lat, lng, districts
-
-def test_a2ds2():
-    service = AddressToStateDistrictService()
-    cities = {
-        'Tuscaloosa, AL': (33.23, 87.62),
-        'Chicago, IL': (41.90, 87.65),
-        'New York, NY': (40.77, 73.98),
-        'Rochester, NY': (43.12, 77.67),
-        'Houston, TX': (29.97, 95.35),
-        'RDU, NC': (35.87, 78.78),
-    }
-    for city, (lat,long) in cities.iteritems():
-        print city
-        print service.lat_long_to_district(lat,long)

@@ -1,4 +1,4 @@
-from polipoly import AddressToDistrictService, AddressToStateDistrictService
+from polipoly import AddressToDistrictService#, AddressToStateDistrictService
 from sunlightapi.districts.models import ZipDistrict
 from sunlightapi.api.utils import apimethod, APIError
 from sunlightapi import settings
