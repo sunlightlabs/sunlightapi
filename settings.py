@@ -94,3 +94,8 @@ INSTALLED_APPS = (
     'sunlightapi.lobbyists',
     'sunlightapi.words',
 )
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
