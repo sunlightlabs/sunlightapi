@@ -1,6 +1,5 @@
 import re
 import string
-from polipoly import AddressToDistrictService
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import SortedDict
 from sunlightapi.legislators.models import Legislator, LegislatorBucket, Committee
