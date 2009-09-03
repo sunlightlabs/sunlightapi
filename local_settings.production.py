@@ -1,7 +1,5 @@
 # Django settings for sunlight_api deployed
 
-from settings import *
-
 DEBUG = False
 
 DATABASE_ENGINE = 'mysql'
