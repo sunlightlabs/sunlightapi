@@ -13,6 +13,6 @@ ADMIN_MEDIA_PREFIX = '/api/media/admin/'
 
 
 TEMPLATE_DIRS = (
-    '/home/admin/django-projects/sunlightapi/templates/',
+    '/home/api/lib/python/sunlightapi/templates/',
 )
 
