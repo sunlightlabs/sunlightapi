@@ -2,11 +2,11 @@
 
 DEBUG = False
 
-DATABASE_ENGINE = 'mysql'
+DATABASE_ENGINE = 'postgresql_psycopg2'
 DATABASE_NAME = 'sunlightapi'
 DATABASE_USER = 'sunlightapi'
 DATABASE_PASSWORD = '***REMOVED***'
-DATABASE_HOST = 'services.sunlightlabs.com'
+DATABASE_HOST = 'morgan.sunlightlabs.org'
 DATABASE_PORT = ''
 
 ADMIN_MEDIA_PREFIX = '/api/media/admin/'
