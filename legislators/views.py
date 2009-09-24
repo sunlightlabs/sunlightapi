@@ -5,6 +5,7 @@ from django.utils.datastructures import SortedDict
 from sunlightapi.legislators.models import Legislator, LegislatorBucket, Committee
 from sunlightapi.districts.models import ZipDistrict
 from sunlightapi.api.utils import apimethod, APIError, score_match
+from sunlightapi.districts.utils import _district_from_latlong
 
 RE_TITLES = re.compile(r'((Congress(wo)?man)|(Sen((ator)|\.)?)|(Rep((resentative)|(\.))?))\s+')
 RE_SUFFIX = re.compile(r'\b(Jr|Junior|Ii|Iii|Iv)\b')
@@ -56,7 +57,24 @@ def legislators_allforzip(params):
 
     objs = [{'legislator': leg.__dict__} for leg in legislators]
     obj = {'legislators': objs}
+    return obj
 
+@apimethod('legislators.allForLatLong')
+def legislators_allforlatlong(params):
+    """ Find all legislators that represent a given lat/long.
+    """
+    district = _district_from_latlong(params)[0]
+
+    state = district.state_abbrev
+    num = district.district
+    if num[0] == '0':
+        num = num[1]
+    sens = Legislator.objects.filter(title='Sen', state=state)
+    rep = Legislator.objects.filter(state=state, district=num)
+    legislators = list(sens) + list(rep)
+
+    objs = [{'legislator': leg.__dict__} for leg in legislators]
+    obj = {'legislators': objs}
     return obj
 
 @apimethod('legislators.search')

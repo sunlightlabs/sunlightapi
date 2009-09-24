@@ -1,6 +1,6 @@
-from django.contrib.gis.geos import Point
 from sunlightapi.districts.models import ZipDistrict, CongressDistrict
 from sunlightapi.api.utils import apimethod, APIError
+from sunlightapi.districts.utils import _district_from_latlong
 from sunlightapi import settings
 
 @apimethod('districts.getDistrictsFromZip')
@@ -29,20 +29,7 @@ def zips_from_district(params):
 @apimethod('districts.getDistrictFromLatLong')
 def district_from_latlong(params):
     """ Return the district that a lat/long coordinate pair falls within """
-    lat = params['latitude']
-    lng = params['longitude']
-
-    try:
-        flat, flng = float(lat), float(lng)
-    except ValueError:
-        raise APIError('Latitude & Longitude must be floating-point values')
-    # force longitude to western hemisphere
-    if flng > 0:
-        flng = -flng
-    districts = CongressDistrict.objects.filter(mpoly__contains=(Point(flng, flat)))
-
-    if len(districts) == 0:
-        raise APIError('Point not within a congressional district.')
+    districts = _district_from_latlong(params)
 
     objs = [{'district': {'state': d.state_abbrev,
                           'number': int(d.district,10)}} for d in districts]
