@@ -10,12 +10,24 @@ from sunlightapi.districts.utils import _district_from_latlong
 RE_TITLES = re.compile(r'((Congress(wo)?man)|(Sen((ator)|\.)?)|(Rep((resentative)|(\.))?))\s+')
 RE_SUFFIX = re.compile(r'\b(Jr|Junior|Ii|Iii|Iv)\b')
 
+def _iexact_params(params):
+    strs = ('firstname', 'middlename', 'lastname', 'name_suffix', 'nickname',
+            'title', 'state', 'district', 'party')
+    new_params = {}
+    for k,v in params.iteritems():
+        if k in strs:
+            new_params[''.join((k, '__iexact'))] = v
+        else:
+            new_params[k] = v
+    return new_params
+
 @apimethod('legislators.get')
 def legislators_get(params):
     """ Run a query against the Legislators table based on params
 
         Finds legislator matching constraints passed in params dict
     """
+    params = _iexact_params(params)
     if params.pop('all_legislators', False) or 'in_office' in params:
         leg = Legislator.all_legislators.get(**params)
     else:
@@ -30,6 +42,7 @@ def legislators_getlist(params):
 
         Finds legislators matching constraints passed in params dict
     """
+    params = _iexact_params(params)
     if params.pop('all_legislators', False) or 'in_office' in params:
         legislators = Legislator.all_legislators.filter(**params)
     else:
