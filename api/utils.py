@@ -51,6 +51,12 @@ def score_match(str, bucket):
 
     return jaro_winkler(str, name)
 
+def make_serializable(obj):
+    from datetime import date
+    if isinstance(obj, date):
+        return str(obj)
+    else:
+        raise TypeError
 
 def apimethod(method_name):
     """ Decorator to do the repeat work of all api methods.
@@ -131,7 +137,7 @@ def apimethod(method_name):
                     response = dict_to_xml(response).replace('&', '&amp;')
                     mimetype = 'application/xml'
                 else:
-                    response = simplejson.dumps(response)
+                    response = simplejson.dumps(response, default=make_serializable)
                     if jsonp:
                         response = '%s(%s)' % (jsonp, response)
                         mimetype = 'text/javascript'

@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 from django.core.management.base import BaseCommand, make_option
 from sunlightapi.legislators.models import Legislator
 
@@ -28,6 +29,7 @@ class Command(BaseCommand):
 
         for line in csvfile:
             line['in_office'] = (line['in_office'] == '1')
+            line['birthdate'] = datetime.strptime(line['birthdate'], '%m/%d/%Y').date()
             bioguide = line['bioguide_id']
             leg = all_legislators.get(bioguide)
             if leg:
