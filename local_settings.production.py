@@ -1,6 +1,6 @@
 # Django settings for sunlight_api deployed
 
-DEBUG = True
+DEBUG = False
 
 DATABASE_ENGINE = 'postgresql_psycopg2'
 DATABASE_NAME = 'sunlightapi'
