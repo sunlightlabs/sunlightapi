@@ -1,3 +1,4 @@
+import re
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 
@@ -9,24 +10,25 @@ def create_buckets(person, bucket_type):
 
     # first and last initial
     if person.firstname:
-        first_initial = person.firstname[0] 
-        last_initial = person.lastname[0]
-        bucket_type.objects.create(person=person, bucket=first_initial+last_initial,
+        first_initial = person.firstname[0]
+        last_initials = ''.join(n[0] for n in person.lastname.split())
+        bucket_type.objects.create(person=person, bucket=first_initial+last_initials,
                                    name_type=NameMatchingBucket.FIRST_LAST)
-        bucket_type.objects.create(person=person, bucket=last_initial+first_initial,
+        bucket_type.objects.create(person=person, bucket=last_initials+first_initial,
                                    name_type=NameMatchingBucket.LAST_FIRST)
-        bucket_type.objects.create(person=person, bucket=last_initial,
+        bucket_type.objects.create(person=person, bucket=last_initials,
                                    name_type=NameMatchingBucket.LAST)
 
     # nickname is optional
     try:
         nick = person.nickname[0]
-        bucket_type.objects.create(person=person, bucket=nick+last_initial,
+        bucket_type.objects.create(person=person, bucket=nick+last_initials,
                                    name_type=NameMatchingBucket.NICK_LAST)
-        bucket_type.objects.create(person=person, bucket=last_initial+nick,
+        bucket_type.objects.create(person=person, bucket=last_initials+nick,
                                    name_type=NameMatchingBucket.LAST_NICK)
     except (AttributeError, IndexError):
         pass
+
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (

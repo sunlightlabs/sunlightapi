@@ -112,7 +112,7 @@ def legislators_search(params):
     # if didn't find them, try extracting the last name
     if not buckets and len(fingerprint) > 1:
         buckets = LegislatorBucket.objects.filter(bucket=fingerprint[-1])
-        name = name.rsplit(' ', 1)[-1]
+        name = name.split(' ', 1)[1]
 
     # get sorted list of scores, and filter those below threshold
     if buckets:
