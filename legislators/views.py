@@ -112,7 +112,7 @@ def legislators_search(params):
     # if didn't find them, try extracting the last name
     if not buckets and len(fingerprint) > 1:
         buckets = LegislatorBucket.objects.filter(bucket=fingerprint[-1])
-        name = name.rsplit(' ', 1)[-1]
+        name = name.split(' ', 1)[1]
 
     # get sorted list of scores, and filter those below threshold
     if buckets:
@@ -138,7 +138,7 @@ def _com_to_dict(com):
 def _chain_subcommittees(committee_list):
     """ collapse subcommittees in a list under their parent committee """
     results = {}
-    for c in committee_list:
+    for c in sorted(committee_list, lambda a,b: cmp(a.id, b.id)):
         if c.parent_id:
             results[c.parent_id].setdefault('subcommittees', []).append({'committee': _com_to_dict(c)})
         else:
