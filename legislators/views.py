@@ -138,7 +138,7 @@ def _com_to_dict(com):
 def _chain_subcommittees(committee_list):
     """ collapse subcommittees in a list under their parent committee """
     results = {}
-    for c in committee_list:
+    for c in sorted(committee_list, lambda a,b: cmp(a.id, b.id)):
         if c.parent_id:
             results[c.parent_id].setdefault('subcommittees', []).append({'committee': _com_to_dict(c)})
         else:
