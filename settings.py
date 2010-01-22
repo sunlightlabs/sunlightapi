@@ -6,6 +6,8 @@ ROOT = lambda f : os.path.join(os.path.dirname(__file__), f).replace('\\','/')
 # set base URL for API
 API_URL_BASE = 'api/'
 
+API_CLASS_PATH = 'sunlightapi.api.views.ApiViews'
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 if DEBUG:
@@ -93,6 +95,7 @@ INSTALLED_APPS = (
     'sunlightapi.districts',
     'sunlightapi.lobbyists',
     'sunlightapi.words',
+    'locksmith.common',
 )
 
 try:

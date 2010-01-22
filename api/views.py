@@ -5,6 +5,13 @@ from django.core.mail import send_mail
 import datetime
 from sunlightapi.api.models import LogEntry, ApiUser, ApiUserForm
 
+from locksmith.common import ApiAuthBase
+
+class ApiViews(ApiAuthBase):
+    API_NAME = 'sunlightapi'
+    SIGNING_KEY = '***REMOVED***'
+    API_HUB_URL = 'http://localhost:8000/locksmith'
+
 def register(request):
     if request.method == 'POST':
         form = ApiUserForm(request.POST)
