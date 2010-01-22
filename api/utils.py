@@ -5,7 +5,7 @@ from django.utils import simplejson
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.conf.urls.defaults import url
 from Levenshtein import jaro_winkler
-from sunlightapi.api.models import Source, LogEntry, ApiUser, NameMatchingBucket
+from sunlightapi.api.models import LogEntry, ApiUser, NameMatchingBucket
 from sunlightapi.urls import urlpatterns as _api_urls
 from sunlightapi.settings import API_URL_BASE
 
@@ -76,7 +76,6 @@ def apimethod(method_name):
 
             # preprocess params from request.GET
             params = {}
-            metadata = request.GET.get('metadata', None)
             apikey = request.GET.get('apikey', None)
             jsonp = request.GET.get('jsonp', None)
             for key,val in request.GET.lists():
@@ -117,14 +116,6 @@ def apimethod(method_name):
                                     #caller_host = request.META['REMOTE_HOST'],
                                     is_ajax = request.is_ajax(),
                                     query_string = request.META['QUERY_STRING'])
-
-            # only append metadata if requested & not
-            if metadata and not error:
-                sources = []
-                for s in Source.objects.filter(source_for__name=method_name):
-                    sources.append({'source':{'name':s.name, 'url':s.url,
-                                    'updated':str(s.last_update)}})
-                obj['sources'] = sources
 
             if not error:
                 # replace obj with obj['xml'] or obj['json'] if they exist

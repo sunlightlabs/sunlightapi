@@ -9,30 +9,6 @@ KEY_STATUS = (
 )
 
 
-class Method(models.Model):
-    """ API Methods - used in sourcing """
-
-    name = models.CharField(max_length=50, primary_key=True)
-
-    def __unicode__(self):
-        return self.name
-
-
-class Source(models.Model):
-    """ Sourcing information for API methods """
-
-    name = models.CharField(max_length=50, primary_key=True)
-    url = models.URLField()
-    last_update = models.DateField()
-    source_for = models.ManyToManyField(Method)
-
-    def __unicode__(self):
-        return '%s [updated %s]' % (self.name, self.last_update)
-
-
-    class Meta:
-        ordering = ('last_update',)
-
 class ApiUser(models.Model):
 
     api_key = models.CharField(max_length=32, primary_key=True)

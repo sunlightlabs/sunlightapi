@@ -49,24 +49,6 @@ Use of the Sunlight Labs API is subject to the following terms:
 
 <h2>About the Data</h2>
 
-<p>Our data comes from a variety of sources and updated regularly.</p>
-
-<table>
-    <thead><tr><th>Source</th></tr></thead>
-    <tbody>
-    {% for source in sources %}
-    <tr><td><a href="{{source.url}}">{{source.name}}</a></td></tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-<p>To find out specific details about what sources were involved in the data from any given call append the metadata=true option onto the parameters of any function call.  </p>
-
-<h3>Latest Updates</h3>
-<ul id="latest_commits">
-    <li>...loading from github...</li>
-</ul>
-
 <h3>Download All Data</h3>
 
 <p>We provide a dump of all of the data in the API for those users that are best served by a full copy of this data.  If you are making heavy use of the API, particularly in an application that involves pulling in nearly all of the information the API provides it is recommended that you use this archive.  This dump is always synced to the latest data in the API.<p>
