@@ -113,8 +113,6 @@ def apimethod(method_name):
                                     output = format,
                                     caller_key = apiuser,
                                     caller_ip = request.META['REMOTE_ADDR'],
-                                    #caller_host = request.META['REMOTE_HOST'],
-                                    is_ajax = request.is_ajax(),
                                     query_string = request.META['QUERY_STRING'])
 
             if not error:
