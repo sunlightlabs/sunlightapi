@@ -8,3 +8,5 @@ class ApiViews(ApiAuth):
     api_hub_url = 'http://localhost:8000/locksmith'
     key_model = ApiUser
     key_model_form = ApiUserForm
+
+site = ApiViews()
