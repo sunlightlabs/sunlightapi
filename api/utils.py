@@ -88,7 +88,7 @@ def apimethod(method_name):
 
             # do authorization
             try:
-                apiuser = ApiUser.objects.get(api_key=apikey, status='A')
+                apiuser = ApiUser.objects.get(key=apikey, status='A')
             except ObjectDoesNotExist:
                 return HttpResponseForbidden('Invalid API Key')
 

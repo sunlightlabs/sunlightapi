@@ -13,7 +13,7 @@ def with_apiuser(func):
         # get the user who is calling the service
         try:
             apikey = request.REQUEST['apikey']
-            apiuser = ApiUser.objects.get(api_key=apikey, status='A')
+            apiuser = ApiUser.objects.get(key=apikey, status='A')
         except KeyError:
             return HttpResponseForbidden('Missing API Key')
         except ObjectDoesNotExist:

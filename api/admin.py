@@ -1,10 +1,10 @@
 from django.contrib import admin
 from sunlightapi.api.models import ApiUser, LogEntry
-    
+
 class ApiUserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'api_key', 'status', 'org_name', 'org_url',
-                    'usage', 'signup_time')
-    list_display_links = ('email', 'api_key')
+    list_display = ('email', 'key', 'status', 'org_name', 'org_url',
+                    'usage', 'issued_on')
+    list_display_links = ('email', 'key')
     list_filter = ('status',)
 
 class LogEntryAdmin(admin.ModelAdmin):
