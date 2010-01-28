@@ -1,4 +1,4 @@
-from sunlightapi.api.models import ApiKey
+from sunlightapi.api.models import ApiKey, ApiKeyForm
 
 from locksmith.auth import ApiAuth
 
@@ -8,6 +8,7 @@ class ApiViews(ApiAuth):
     api_hub_url = 'http://localhost:8000/locksmith'
 
     key_model = ApiKey
+    key_model_form = ApiKeyForm
 
     require_confirmation = True
     registration_email_subject = 'Sunlight Labs API Registration'
