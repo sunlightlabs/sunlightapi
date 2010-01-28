@@ -6,6 +6,8 @@ ROOT = lambda f : os.path.join(os.path.dirname(__file__), f).replace('\\','/')
 # set base URL for API
 API_URL_BASE = 'api/'
 
+API_CLASS_PATH = 'sunlightapi.api.views.ApiViews'
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 if DEBUG:
@@ -93,7 +95,13 @@ INSTALLED_APPS = (
     'sunlightapi.districts',
     'sunlightapi.lobbyists',
     'sunlightapi.words',
+    'locksmith.common',
+    'locksmith.auth',
 )
+
+LOCKSMITH_HUB_URL = 'http://127.0.0.1:8000/locksmith/'
+LOCKSMITH_SIGNING_KEY = '***REMOVED***'
+LOCKSMITH_API_NAME = 'sunlightapi'
 
 try:
     from local_settings import *

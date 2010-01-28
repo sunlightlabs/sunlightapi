@@ -1,7 +1,7 @@
 import string 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseForbidden
-from sunlightapi.api.models import ApiUser
+from sunlightapi.api.models import ApiKey
 from sunlightapi.words.models import WordList
 from django.shortcuts import get_object_or_404
 from django.utils.functional import wraps
@@ -13,7 +13,7 @@ def with_apiuser(func):
         # get the user who is calling the service
         try:
             apikey = request.REQUEST['apikey']
-            apiuser = ApiUser.objects.get(api_key=apikey, status='A')
+            apiuser = ApiKey.objects.get(key=apikey, status='A')
         except KeyError:
             return HttpResponseForbidden('Missing API Key')
         except ObjectDoesNotExist:
