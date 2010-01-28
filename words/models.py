@@ -1,9 +1,9 @@
 from django.db import models
-from sunlightapi.api.models import ApiUser
+from sunlightapi.api.models import ApiKey
 
 class WordList(models.Model):
     slug = models.SlugField(max_length=50, primary_key=True)
-    user = models.ForeignKey(ApiUser)
+    user = models.ForeignKey(ApiKey)
     words = models.TextField()
     delimiter = models.CharField(max_length=1)
 
