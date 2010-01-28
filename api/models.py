@@ -11,7 +11,7 @@ class ApiUser(Key):
 class ApiUserForm(ModelForm):
     class Meta:
         model = ApiUser
-        exclude = ('key', 'issued_on', 'status')
+        exclude = ('key', 'issued_on', 'status', 'pub_status')
 
     def clean_email(self):
         if ApiUser.objects.filter(email=self.cleaned_data['email']).count():
