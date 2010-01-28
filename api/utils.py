@@ -5,7 +5,7 @@ from django.utils import simplejson
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.conf.urls.defaults import url
 from Levenshtein import jaro_winkler
-from sunlightapi.api.models import LogEntry, ApiUser, NameMatchingBucket
+from sunlightapi.api.models import LogEntry, ApiKey, NameMatchingBucket
 from sunlightapi.urls import urlpatterns as _api_urls
 from sunlightapi.settings import API_URL_BASE
 
@@ -88,7 +88,7 @@ def apimethod(method_name):
 
             # do authorization
             try:
-                apiuser = ApiUser.objects.get(key=apikey, status='A')
+                apiuser = ApiKey.objects.get(key=apikey, status='A')
             except ObjectDoesNotExist:
                 return HttpResponseForbidden('Invalid API Key')
 

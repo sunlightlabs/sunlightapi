@@ -3,18 +3,18 @@ from django.forms import ModelForm
 from django.forms.util import ValidationError
 from locksmith.auth.models import Key
 
-class ApiUser(Key):
+class ApiKey(Key):
     org_name = models.CharField('Organization Name', max_length=100, blank=True)
     org_url = models.URLField('Organization URL', blank=True)
     usage = models.TextField('Intended Usage', blank=True)
 
-class ApiUserForm(ModelForm):
+class ApiKeyForm(ModelForm):
     class Meta:
-        model = ApiUser
+        model = ApiKey
         exclude = ('key', 'issued_on', 'status', 'pub_status')
 
     def clean_email(self):
-        if ApiUser.objects.filter(email=self.cleaned_data['email']).count():
+        if ApiKey.objects.filter(email=self.cleaned_data['email']).count():
             raise ValidationError('Email address already registered')
         return self.cleaned_data['email']
 
@@ -25,7 +25,7 @@ class LogEntry(models.Model):
     error = models.BooleanField(default=False)
     output = models.CharField(max_length=4)
 
-    caller_key = models.ForeignKey(ApiUser)
+    caller_key = models.ForeignKey(ApiKey)
     caller_ip = models.IPAddressField()
     query_string = models.CharField(max_length=200,null=True)
 
