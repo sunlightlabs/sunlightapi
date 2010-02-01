@@ -1,8 +1,8 @@
 from sunlightapi.api.models import ApiKey, ApiKeyForm
 
-from locksmith.auth import ApiAuth
+from locksmith.auth import AuthViews
 
-class ApiViews(ApiAuth):
+class ApiViews(AuthViews):
     api_name = 'sunlightapi'
     signing_key = '***REMOVED***'
     api_hub_url = 'http://localhost:8000/locksmith'
