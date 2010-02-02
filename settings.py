@@ -6,8 +6,6 @@ ROOT = lambda f : os.path.join(os.path.dirname(__file__), f).replace('\\','/')
 # set base URL for API
 API_URL_BASE = 'api/'
 
-API_CLASS_PATH = 'sunlightapi.api.views.ApiViews'
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 if DEBUG:
@@ -21,16 +19,6 @@ ADMINS = (
 MANAGERS = ADMINS
 EMAIL_SUBJECT_PREFIX = '[Sunlight API] '
 
-CD_SHAPEFILE = ROOT('congdist/cd99_110')
-STATE_SHAPEFILE_DIR = ROOT('congdist/states')
-
-DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = ROOT('apidata.sqlite3')
-DATABASE_USER = ''
-DATABASE_PASSWORD = ''
-DATABASE_HOST = ''
-DATABASE_PORT = ''
-
 EMAIL_HOST = 'smtp.sunlightlabs.com'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = '***REMOVED***'
@@ -42,7 +30,7 @@ TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 
-USE_I18N = True
+USE_I18N = False
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
