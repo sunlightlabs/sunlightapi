@@ -1,10 +1,10 @@
 import string 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseForbidden
-from sunlightapi.api.models import ApiKey
 from sunlightapi.words.models import WordList
 from django.shortcuts import get_object_or_404
 from django.utils.functional import wraps
+from locksmith.auth.models import ApiKey
 
 MAX_WORDLIST_BYTES = 5000
 

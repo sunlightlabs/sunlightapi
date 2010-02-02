@@ -1,22 +1,7 @@
 from django.db import models
 from django.forms import ModelForm
 from django.forms.util import ValidationError
-from locksmith.auth.models import Key
-
-class ApiKey(Key):
-    org_name = models.CharField('Organization Name', max_length=100, blank=True)
-    org_url = models.URLField('Organization URL', blank=True)
-    usage = models.TextField('Intended Usage', blank=True)
-
-class ApiKeyForm(ModelForm):
-    class Meta:
-        model = ApiKey
-        exclude = ('key', 'issued_on', 'status', 'pub_status')
-
-    def clean_email(self):
-        if ApiKey.objects.filter(email=self.cleaned_data['email']).count():
-            raise ValidationError('Email address already registered')
-        return self.cleaned_data['email']
+from locksmith.auth.models import ApiKey
 
 class LogEntry(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)

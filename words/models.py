@@ -1,5 +1,5 @@
 from django.db import models
-from sunlightapi.api.models import ApiKey
+from locksmith.auth.models import ApiKey
 
 class WordList(models.Model):
     slug = models.SlugField(max_length=50, primary_key=True)
