@@ -1,13 +1,12 @@
 from django.conf.urls.defaults import *
 from django.contrib import admin
 from django.contrib import databrowse
-from sunlightapi.api.views import site
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^api/$', include('sunlightapi.api.urls')),
-    (r'^api/', include(site.urls)),
+    (r'^api/', include('locksmith.auth.urls')),
     (r'^api/admin/(.*)', admin.site.root),
     (r'^api/databrowse/(.*)', databrowse.site.root),
     (r'^api/wordlist/', include('sunlightapi.words.urls')),
