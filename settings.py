@@ -86,7 +86,7 @@ INSTALLED_APPS = (
     'locksmith.auth',
 )
 
-LOCKSMITH_HUB_URL = 'http://127.0.0.1:8000/locksmith/'
+LOCKSMITH_HUB_URL = 'http://services.sunlightlabs.com/analytics/'
 LOCKSMITH_SIGNING_KEY = '***REMOVED***'
 LOCKSMITH_API_NAME = 'sunlightapi'
 
