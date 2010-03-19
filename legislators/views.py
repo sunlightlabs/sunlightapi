@@ -63,7 +63,10 @@ def legislators_allforzip(params):
     legislators = set()
     states = set()
     for zd in zds:
-        legislators.add(Legislator.objects.get(state=zd.state, district=zd.district))
+        try:
+            legislators.add(Legislator.objects.get(state=zd.state, district=zd.district))
+        except Legislator.DoesNotExist:
+            pass
         if zd.state not in states:
             states.add(zd.state)
             legislators.update(Legislator.objects.filter(state=zd.state, title='Sen'))
