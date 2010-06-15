@@ -1,3 +1,4 @@
+import re
 from sunlightapi.districts.models import ZipDistrict, CongressDistrict
 from sunlightapi.api.utils import apimethod, APIError
 from sunlightapi.districts.utils import _district_from_latlong
@@ -6,9 +7,13 @@ from sunlightapi import settings
 @apimethod('districts.getDistrictsFromZip')
 def districts_from_zip(params):
     """ Return all congressional districts that contain a given zipcode """
-    zds = ZipDistrict.objects.filter(zip=params['zip'])
-    objs = [{'district': {'state': zd.state, 'number': zd.district}}
-            for zd in zds]
+    zip_re = re.compile('\d{5}')
+    if zip_re.match(params['zip']):
+        zds = ZipDistrict.objects.filter(zip=params['zip'])
+        objs = [{'district': {'state': zd.state, 'number': zd.district}}
+                for zd in zds]
+    else:
+        objs = []
     obj = {'districts': objs}
 
     return obj
