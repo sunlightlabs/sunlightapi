@@ -21,6 +21,11 @@ def _iexact_params(params):
             new_params[k] = v
     return new_params
 
+def _fdict(obj):
+    d = dict(obj.__dict__)
+    d.pop('_state')
+    return d
+
 @apimethod('legislators.get')
 def legislators_get(params):
     """ Run a query against the Legislators table based on params
@@ -32,7 +37,7 @@ def legislators_get(params):
         leg = Legislator.all_legislators.get(**params)
     else:
         leg = Legislator.objects.get(**params)
-    obj = {'legislator': leg.__dict__}
+    obj = {'legislator': _fdict(leg)}
 
     return obj
 
@@ -48,7 +53,7 @@ def legislators_getlist(params):
     else:
         legislators = Legislator.objects.filter(**params)
 
-    objs = [{'legislator': leg.__dict__} for leg in legislators]
+    objs = [{'legislator': _fdict(leg)} for leg in legislators]
     obj = {'legislators': objs}
 
     return obj
@@ -71,7 +76,7 @@ def legislators_allforzip(params):
             states.add(zd.state)
             legislators.update(Legislator.objects.filter(state=zd.state, title='Sen'))
 
-    objs = [{'legislator': leg.__dict__} for leg in legislators]
+    objs = [{'legislator': _fdict(leg)} for leg in legislators]
     obj = {'legislators': objs}
     return obj
 
@@ -89,7 +94,7 @@ def legislators_allforlatlong(params):
     rep = Legislator.objects.filter(state=state, district=num)
     legislators = list(sens) + list(rep)
 
-    objs = [{'legislator': leg.__dict__} for leg in legislators]
+    objs = [{'legislator': _fdict(leg)} for leg in legislators]
     obj = {'legislators': objs}
     return obj
 
@@ -125,7 +130,7 @@ def legislators_search(params):
         for score, bucket in scores:
             # score high enough, hasn't been seen, in office unless we're looking for everyone
             if score > threshold and bucket.person.bioguide_id not in seen_people and (bucket.person.in_office or all_legislators):
-                results.append({'result': {'score': score, 'legislator': bucket.person.__dict__}})
+                results.append({'result': {'score': score, 'legislator': _fdict(bucket.person)}})
                 seen_people.add(bucket.person.bioguide_id)
 
         return {'results': results}
@@ -134,7 +139,7 @@ def legislators_search(params):
 
 def _com_to_dict(com):
     """ convert committee into a suitable dict for output """
-    od = SortedDict(com.__dict__)
+    od = SortedDict(_fdict(com.__dict__))
     od.pop('parent_id')
     return od
 
@@ -155,7 +160,7 @@ def committees_get(params):
     committee = Committee.objects.get(pk=com_id)
     result = {'committee': _com_to_dict(committee)}
     result['committee']['subcommittees'] = [{'committee': _com_to_dict(c)} for c in committee.subcommittees.all()]
-    result['committee']['members'] = [{'legislator': m.__dict__} for m in committee.members.all()]
+    result['committee']['members'] = [{'legislator': _fdict(m)} for m in committee.members.all()]
     return result
 
 @apimethod('committees.getList')
