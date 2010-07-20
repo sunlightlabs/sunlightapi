@@ -4,7 +4,6 @@ from django.core.management.base import BaseCommand, CommandError
 
 from sunlightapi.api.models import NameMatchingBucket
 from sunlightapi.legislators.models import Legislator, LegislatorBucket
-from sunlightapi.lobbyists.models import Lobbyist, LobbyistBucket
 
 def create_buckets(person, bucket_type):
 
@@ -31,28 +30,12 @@ def create_buckets(person, bucket_type):
 
 
 class Command(BaseCommand):
-    option_list = BaseCommand.option_list + (
-        make_option('--legislators', action='store_true', dest='legislators',
-                    default=False, help='refresh legislator buckets'),
-        make_option('--lobbyists', action='store_true', dest='lobbyists',
-                    default=False, help='refresh lobbyist buckets'),)
-
     help = "Create the buckets for loose matching of people's names"
     args = ""
     requires_model_validation = False
 
     def handle(self, *fname, **options):
-        legislators = options.get('legislators', False)
-        lobbyists = options.get('lobbyists', False)
-        # fill all the buckets
-        if legislators:
-            LegislatorBucket.objects.all().delete()
-            for leg in Legislator.all_legislators.all():
-                print leg
-                create_buckets(leg, LegislatorBucket)
-
-        if lobbyists:
-            LobbyistBucket.objects.delete()
-            for lobbyist in Lobbyist.objects.all():
-                print lobbyist
-                create_buckets(lobbyist, LobbyistBucket)
+        LegislatorBucket.objects.all().delete()
+        for leg in Legislator.all_legislators.all():
+            print leg
+            create_buckets(leg, LegislatorBucket)

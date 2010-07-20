@@ -81,7 +81,6 @@ INSTALLED_APPS = (
     'sunlightapi.api',
     'sunlightapi.legislators',
     'sunlightapi.districts',
-    'sunlightapi.lobbyists',
     'sunlightapi.words',
     'locksmith.auth',
 )
