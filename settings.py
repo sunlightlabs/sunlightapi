@@ -75,13 +75,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
-    'django.contrib.databrowse',
     'django.contrib.flatpages',
     'django.contrib.redirects',
     'sunlightapi.api',
     'sunlightapi.legislators',
     'sunlightapi.districts',
-    'sunlightapi.words',
     'locksmith.auth',
 )
 
