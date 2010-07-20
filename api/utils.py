@@ -4,7 +4,7 @@ from django.core.exceptions import MultipleObjectsReturned, FieldError, ObjectDo
 from django.utils import simplejson
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.conf.urls.defaults import url
-from Levenshtein import jaro_winkler
+from jellyfish import jaro_winkler
 from sunlightapi.api.models import LogEntry, NameMatchingBucket
 from sunlightapi.urls import urlpatterns as _api_urls
 from sunlightapi.settings import API_URL_BASE
