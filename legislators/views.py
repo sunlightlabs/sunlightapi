@@ -23,7 +23,8 @@ def _iexact_params(params):
 
 def _fdict(obj):
     d = dict(obj.__dict__)
-    d.pop('_state')
+    if '_state' in d:
+        d.pop('_state')
     return d
 
 @apimethod('legislators.get')
