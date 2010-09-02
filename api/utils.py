@@ -135,6 +135,9 @@ def apimethod(method_name):
                         mimetype = 'application/json'
 
                 return HttpResponse(response, mimetype)
+            elif error and jsonp:
+                response = '%s({"error": "%s"})' % (jsonp, error)
+                return HttpResponse(response, 'text/javascript')
             else:
                 return HttpResponseBadRequest(error)
 
