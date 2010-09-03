@@ -22,6 +22,8 @@ def _iexact_params(params):
     return new_params
 
 def _fdict(obj):
+    if isinstance(obj, dict):
+        return d
     d = dict(obj.__dict__)
     if '_state' in d:
         d.pop('_state')
