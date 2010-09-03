@@ -23,7 +23,7 @@ def _iexact_params(params):
 
 def _fdict(obj):
     if isinstance(obj, dict):
-        return d
+        return obj
     d = dict(obj.__dict__)
     if '_state' in d:
         d.pop('_state')
