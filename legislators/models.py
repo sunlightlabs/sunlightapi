@@ -54,7 +54,6 @@ class Legislator(models.Model):
     fax = PhoneNumberField(blank=True)
     website = models.URLField(blank=True)
     webform = models.URLField(blank=True)
-    email = models.EmailField(blank=True)
 
     # other info
     gender = models.CharField(max_length=1, choices=GENDERS)
