@@ -33,7 +33,7 @@ class Legislator(models.Model):
 
     all_legislators = AllLegislatorManager()
     objects = ActiveLegislatorManager()
-    
+
     # name
     firstname = models.CharField(max_length=30)
     middlename = models.CharField(max_length=30, blank=True)
@@ -67,7 +67,6 @@ class Legislator(models.Model):
     crp_id = models.CharField(max_length=20)
     bioguide_id = models.CharField(max_length=20, primary_key=True)
     govtrack_id = models.CharField(max_length=20)
-    eventful_id = models.CharField(max_length=20, blank=True)
     twitter_id = models.CharField(max_length=20, blank=True)
     congresspedia_url = models.URLField()
     youtube_url = models.URLField(blank=True)
