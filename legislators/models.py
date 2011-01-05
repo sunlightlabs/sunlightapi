@@ -54,7 +54,6 @@ class Legislator(models.Model):
     fax = PhoneNumberField(blank=True)
     website = models.URLField(blank=True)
     webform = models.URLField(blank=True)
-    email = models.EmailField(blank=True)
 
     # other info
     gender = models.CharField(max_length=1, choices=GENDERS)
@@ -67,7 +66,6 @@ class Legislator(models.Model):
     crp_id = models.CharField(max_length=20)
     bioguide_id = models.CharField(max_length=20, primary_key=True)
     govtrack_id = models.CharField(max_length=20)
-    eventful_id = models.CharField(max_length=20, blank=True)
     twitter_id = models.CharField(max_length=20, blank=True)
     congresspedia_url = models.URLField()
     youtube_url = models.URLField(blank=True)

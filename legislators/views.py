@@ -27,6 +27,8 @@ def _fdict(obj):
     d = dict(obj.__dict__)
     if '_state' in d:
         d.pop('_state')
+    d['email'] = d['eventful_id'] = ''
+    d['chamber'] = 'senate' if d['title'] == 'Sen' else 'house'
     return d
 
 @apimethod('legislators.get')
