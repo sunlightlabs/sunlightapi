@@ -67,6 +67,7 @@ class Legislator(models.Model):
     bioguide_id = models.CharField(max_length=20, primary_key=True)
     govtrack_id = models.CharField(max_length=20)
     twitter_id = models.CharField(max_length=20, blank=True)
+    facebook_id = models.CharField(max_length=50, blank=True)
     congresspedia_url = models.URLField()
     youtube_url = models.URLField(blank=True)
     official_rss = models.URLField(blank=True)
