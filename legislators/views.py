@@ -1,11 +1,9 @@
 import re
 import string
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import SortedDict
 from sunlightapi.legislators.models import Legislator, LegislatorBucket, Committee
-from sunlightapi.districts.models import ZipDistrict
 from sunlightapi.api.utils import apimethod, APIError, score_match
-from sunlightapi.districts.utils import _district_from_latlong
+from sunlightapi.districts.utils import _district_from_latlong, _districts_from_zip
 
 RE_TITLES = re.compile(r'((Congress(wo)?man)|(Sen((ator)|\.)?)|(Rep((resentative)|(\.))?))\s+')
 RE_SUFFIX = re.compile(r'\b(Jr|Junior|Ii|Iii|Iv)\b')
@@ -69,17 +67,21 @@ def legislators_allforzip(params):
 
         Typically this means 2 senators and 1 or more representatives.
     """
-    zds = ZipDistrict.objects.filter(zip=params['zip'])
+    zds = _districts_from_zip(params['zip'])
+
     legislators = set()
     states = set()
     for zd in zds:
+        zd = zd['district']
         try:
-            legislators.add(Legislator.objects.get(state=zd.state, district=zd.district))
+            legislators.add(Legislator.objects.get(state=zd['state'],
+                                                   district=zd['number']))
         except Legislator.DoesNotExist:
             pass
-        if zd.state not in states:
-            states.add(zd.state)
-            legislators.update(Legislator.objects.filter(state=zd.state, title='Sen'))
+        if zd['state'] not in states:
+            states.add(zd['state'])
+            legislators.update(Legislator.objects.filter(state=zd['state'],
+                                                         title='Sen'))
 
     objs = [{'legislator': _fdict(leg)} for leg in legislators]
     obj = {'legislators': objs}
@@ -91,10 +93,8 @@ def legislators_allforlatlong(params):
     """
     district = _district_from_latlong(params)[0]
 
-    state = district.state_abbrev
-    num = district.district
-    if num[0] == '0':
-        num = num[1]
+    state = district['district']['state']
+    num = district['district']['number']
     sens = Legislator.objects.filter(title='Sen', state=state)
     rep = Legislator.objects.filter(state=state, district=num)
     legislators = list(sens) + list(rep)
