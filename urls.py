@@ -6,7 +6,6 @@ admin.autodiscover()
 urlpatterns = patterns('',
     (r'^api/', include('sunlightapi.api.urls')),
     (r'^api/', include('locksmith.auth.urls')),
-    (r'^api/admin/(.*)', admin.site.root),
 )
 
 # currently need views to be imported so that their urls can be inserted

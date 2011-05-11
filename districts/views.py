@@ -4,19 +4,41 @@ from sunlightapi.api.utils import apimethod, APIError
 from sunlightapi.districts.utils import _district_from_latlong
 from sunlightapi import settings
 
+import urllib
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
+def _query_boundary_server(**params):
+    BOUNDARY_SERVER_URL = 'http://pentagon.sunlightlabs.net/1.0/boundary/?'
+    url = BOUNDARY_SERVER_URL + urllib.urlencode(params)
+    data = urllib.urlopen(url)
+    return json.load(data)
+
+ZIP_RE = re.compile('\d{5}')
+
 @apimethod('districts.getDistrictsFromZip')
 def districts_from_zip(params):
     """ Return all congressional districts that contain a given zipcode """
-    zip_re = re.compile('\d{5}')
-    if zip_re.match(params['zip']):
-        zds = ZipDistrict.objects.filter(zip=params['zip'])
-        objs = [{'district': {'state': zd.state, 'number': zd.district}}
-                for zd in zds]
-    else:
-        objs = []
-    obj = {'districts': objs}
 
-    return obj
+    objs = []
+
+    if ZIP_RE.match(params['zip']):
+        result = _query_boundary_server(intersects='zcta-'+params['zip'],
+                                        sets='cd')
+
+        # convert objects
+        for zobj in result.get('objects', []):
+            if '(at Large)' in zobj['name']:
+                state = zobj['name'][0:2]
+                number = '0'
+            else:
+                state, number = zobj['name'].split(' Congressional District ')
+
+            objs.append({'district': {'state': state, 'number': number}})
+
+    return {'districts': objs}
 
 @apimethod('districts.getZipsFromDistrict')
 def zips_from_district(params):
@@ -40,4 +62,3 @@ def district_from_latlong(params):
                           'number': int(d.district,10)}} for d in districts]
     obj = {'districts': objs}
     return obj
-
