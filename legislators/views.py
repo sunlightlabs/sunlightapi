@@ -3,10 +3,11 @@ import string
 from django.utils.datastructures import SortedDict
 from sunlightapi.legislators.models import Legislator, LegislatorBucket, Committee
 from sunlightapi.api.utils import apimethod, APIError, score_match
-from sunlightapi.districts.utils import _district_from_latlong, _districts_from_zip
+from sunlightapi.api.utils import _district_from_latlong, _districts_from_zip
 
 RE_TITLES = re.compile(r'((Congress(wo)?man)|(Sen((ator)|\.)?)|(Rep((resentative)|(\.))?))\s+')
 RE_SUFFIX = re.compile(r'\b(Jr|Junior|Ii|Iii|Iv)\b')
+ZIP_RE = re.compile('\d{5}')
 
 def _iexact_params(params):
     strs = ('firstname', 'middlename', 'lastname', 'name_suffix', 'nickname',
@@ -187,3 +188,28 @@ def committees_allforlegislator(params):
     legislator = Legislator.objects.get(pk=bioguide_id)
     results = _chain_subcommittees(legislator.committees.all())
     return {'committees': [{'committee': c} for c in results]}
+
+
+@apimethod('districts.getDistrictsFromZip')
+def districts_from_zip(params):
+    """ Return all congressional districts that contain a given zipcode """
+
+    objs = []
+
+    if ZIP_RE.match(params['zip']):
+        _districts_from_zip(params['zip'])
+
+    return {'districts': objs}
+
+
+@apimethod('districts.getZipsFromDistrict')
+def zips_from_district(params):
+    """ Return all zipcodes within a given congressional district """
+    raise APIError("districts.getZipsFromDistrict is no longer supported")
+
+
+@apimethod('districts.getDistrictFromLatLong')
+def district_from_latlong(params):
+    """ Return the district that a lat/long coordinate pair falls within """
+    objs = _district_from_latlong(params)
+    return {'districts': objs}

@@ -1,5 +1,11 @@
 """ Utilities for creating API Methods """
 
+import urllib
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 from django.core.exceptions import MultipleObjectsReturned, FieldError, ObjectDoesNotExist
 from django.utils import simplejson
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
@@ -15,6 +21,49 @@ FORMAT_STR = '(?P<format>(\.(xml|json))?)$'
 class APIError(Exception):
     def __init__(self, message):
         self.message = message
+
+
+def _query_boundary_server(**params):
+    BOUNDARY_SERVER_URL = 'http://pentagon.sunlightlabs.net/1.0/boundary/?'
+    url = BOUNDARY_SERVER_URL + urllib.urlencode(params)
+    data = urllib.urlopen(url)
+    result = json.load(data)
+
+    objs = []
+    for zobj in result.get('objects', []):
+        if '(at Large)' in zobj['name']:
+            state = zobj['name'][0:2]
+            number = '0'
+        else:
+            state, number = zobj['name'].split(' Congressional District ')
+
+        objs.append({'district': {'state': state, 'number': number}})
+    return objs
+
+
+def _districts_from_zip(zip):
+    return _query_boundary_server(intersects='zcta-'+zip, sets='cd')
+
+
+def _district_from_latlong(params):
+    lat = params['latitude']
+    lng = params['longitude']
+
+    try:
+        flat, flng = float(lat), float(lng)
+    except ValueError:
+        raise APIError('Latitude & Longitude must be floating-point values')
+    # force longitude to western hemisphere
+    if flng > 0:
+        flng = -flng
+
+    districts = _query_boundary_server(contains='%s,%s' % (flat, flng),
+                                       sets='cd')
+
+    if len(districts) == 0:
+        raise APIError('Point not within a congressional district.')
+
+    return districts
 
 
 def dict_to_xml(d):
@@ -37,8 +86,8 @@ def dict_to_xml(d):
         return ''
     else:
         return d
-    
-    
+
+
 def score_match(str, bucket):
     # the string is flipped to properly prioritize the front of string (due to requirements of Jaro-Winkler)
     if bucket.name_type in (NameMatchingBucket.FIRST_LAST, NameMatchingBucket.NICK_LAST) and ' ' in str:
@@ -65,7 +114,7 @@ def apimethod(method_name):
         Turns request.GET into params and converts return value of func from
         a python object to JSON or XML according to format parameter.
     """
-    
+
     def decorator(func):
         def newfunc(request, *args, **kwargs):
 
@@ -146,10 +195,10 @@ def apimethod(method_name):
         newfunc.__dict__.update(func.__dict__)
         newfunc.__doc__ = func.__doc__
         newfunc.__module__ = func.__module__
-        
+
         # append url to patterns
         _api_urls.append(url(r'^%s%s%s' % (API_URL_BASE, method_name, FORMAT_STR), newfunc))
 
         return newfunc
-        
+
     return decorator
