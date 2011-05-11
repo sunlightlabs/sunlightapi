@@ -79,7 +79,6 @@ INSTALLED_APPS = (
     'django.contrib.redirects',
     'sunlightapi.api',
     'sunlightapi.legislators',
-    'sunlightapi.districts',
     'locksmith.auth',
 )
 

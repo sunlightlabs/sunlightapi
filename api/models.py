@@ -27,10 +27,10 @@ class NameMatchingBucket(models.Model):
         (NICK_LAST, 'nickname lastname'),
         (LAST_NICK, 'lastname nickname')
     )
-    
+
     bucket = models.CharField(max_length=5)
     name_type = models.PositiveSmallIntegerField(choices=BUCKET_NAME_TYPE)
-    
+
     def get_person_name(self):
         if self.name_type == self.FIRST_LAST:
             return ' '.join([self.person.firstname, self.person.lastname])
@@ -42,10 +42,10 @@ class NameMatchingBucket(models.Model):
             return ' '.join([self.person.nickname, self.person.lastname])
         elif self.name_type == self.LAST_NICK:
             return ' '.join([self.person.lastname, self.person.nickname])
-        
+
     def __unicode__(self):
         return '%s is %s of %s' % (self.bucket, self.get_name_type_display(),
                                    self.person)
-    
+
     class Meta:
         abstract = True
