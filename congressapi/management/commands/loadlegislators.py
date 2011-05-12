@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime
 from django.core.management.base import BaseCommand, make_option
-from sunlightapi.congressapi.models import Legislator
+from congressapi.models import Legislator
 
 def dictdiff(a, b):
     keydiff = set(a.keys()).symmetric_difference(set(b.keys()))

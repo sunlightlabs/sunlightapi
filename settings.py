@@ -63,7 +63,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
 )
 
-ROOT_URLCONF = 'sunlightapi.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     ROOT('templates/'),
@@ -77,7 +77,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.flatpages',
     'django.contrib.redirects',
-    'sunlightapi.congressapi',
+    'congressapi',
     'locksmith.auth',
 )
 

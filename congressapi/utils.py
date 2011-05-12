@@ -7,14 +7,15 @@ except ImportError:
     import simplejson as json
 
 from django.core.exceptions import MultipleObjectsReturned, FieldError, ObjectDoesNotExist
-from django.utils import simplejson
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
+from django.core.urlresolvers import get_resolver
 from django.conf.urls.defaults import url
+from django.conf import settings
 from jellyfish import jaro_winkler
-from sunlightapi.congressapi.models import NameMatchingBucket, LogEntry
-from sunlightapi.urls import urlpatterns as _api_urls
-from sunlightapi.settings import API_URL_BASE
+from congressapi.models import NameMatchingBucket, LogEntry
 from locksmith.auth.models import ApiKey
+
+_api_urls = get_resolver(None).url_patterns
 
 FORMAT_STR = '(?P<format>(\.(xml|json))?)$'
 
@@ -176,7 +177,7 @@ def apimethod(method_name):
                     response = dict_to_xml(response).replace('&', '&amp;')
                     mimetype = 'application/xml'
                 else:
-                    response = simplejson.dumps(response, default=make_serializable)
+                    response = json.dumps(response, default=make_serializable)
                     if jsonp:
                         response = '%s(%s)' % (jsonp, response)
                         mimetype = 'text/javascript'
@@ -197,7 +198,8 @@ def apimethod(method_name):
         newfunc.__module__ = func.__module__
 
         # append url to patterns
-        _api_urls.append(url(r'^%s%s%s' % (API_URL_BASE, method_name, FORMAT_STR), newfunc))
+        _api_urls.append(url(r'^%s%s%s' % (settings.API_URL_BASE, method_name,
+                                           FORMAT_STR), newfunc))
 
         return newfunc
 

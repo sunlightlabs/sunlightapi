@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from sunlightapi.congressapi.models import Legislator, LegislatorBucket, NameMatchingBucket
+from congressapi.models import Legislator, LegislatorBucket, NameMatchingBucket
 
 def create_buckets(person, bucket_type):
 

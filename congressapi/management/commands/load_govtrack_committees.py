@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, make_option
-from sunlightapi.congressapi.models import Legislator, Committee
+from congressapi.models import Legislator, Committee
 import urllib
 import lxml.html
 
