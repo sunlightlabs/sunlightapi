@@ -1,5 +1,21 @@
 from django.db import models
 from django.contrib.localflavor.us.models import PhoneNumberField
+from locksmith.auth.models import ApiKey
+
+class LogEntry(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    method = models.CharField(max_length=50)
+    error = models.BooleanField(default=False)
+    output = models.CharField(max_length=4)
+
+    caller_key = models.ForeignKey(ApiKey)
+    caller_ip = models.IPAddressField()
+    query_string = models.CharField(max_length=200,null=True)
+
+    class Meta:
+        db_table = "api_logentry"
+
 
 # choices for party
 PARTIES = (
@@ -77,6 +93,7 @@ class Legislator(models.Model):
 
     class Meta:
         ordering = ('lastname', 'firstname')
+        db_table = "legislators_legislator"
 
 class NameMatchingBucket(models.Model):
     FIRST_LAST = 1
@@ -117,6 +134,9 @@ class NameMatchingBucket(models.Model):
 class LegislatorBucket(NameMatchingBucket):
     person = models.ForeignKey(Legislator)
 
+    class Meta:
+        db_table = "legislators_legislatorbucket"
+
 CHAMBERS = (('House', 'House'),('Senate','Senate'))
 
 class Committee(models.Model):
@@ -128,3 +148,6 @@ class Committee(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        db_table = "legislators_committee"
