@@ -1,10 +1,9 @@
 from django.conf.urls.defaults import *
-from django.contrib import admin
-
-admin.autodiscover()
+from django.views.generic.simple import redirect_to
 
 urlpatterns = patterns('',
-    (r'^api/', include('sunlightapi.api.urls')),
+    url(r'^api/$', redirect_to, {'url': 'http://services.sunlightlabs.com/docs/Sunlight_Congress_API/'}),
+    url(r'^api/register/$', redirect_to, {'url': 'http://services.sunlightlabs.com/accounts/register/'}),
     (r'^api/', include('locksmith.auth.urls')),
 )
 

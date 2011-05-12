@@ -1,6 +1,4 @@
 from django.db import models
-from django.forms import ModelForm
-from django.forms.util import ValidationError
 from locksmith.auth.models import ApiKey
 
 class LogEntry(models.Model):
