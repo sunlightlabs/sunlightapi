@@ -12,7 +12,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbid
 from django.conf.urls.defaults import url
 from jellyfish import jaro_winkler
 from sunlightapi.api.models import LogEntry
-from sunlightapi.legislators.models import NameMatchingBucket
+from sunlightapi.congressapi.models import NameMatchingBucket
 from sunlightapi.urls import urlpatterns as _api_urls
 from sunlightapi.settings import API_URL_BASE
 from locksmith.auth.models import ApiKey

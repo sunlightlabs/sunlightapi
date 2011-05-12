@@ -78,7 +78,7 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'django.contrib.redirects',
     'sunlightapi.api',
-    'sunlightapi.legislators',
+    'sunlightapi.congressapi',
     'locksmith.auth',
 )
 

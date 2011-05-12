@@ -9,4 +9,4 @@ urlpatterns = patterns('',
 
 # currently need views to be imported so that their urls can be inserted
 # consider using something similar to admin.autodiscover()
-from sunlightapi.legislators import views
+from sunlightapi.congressapi import views
