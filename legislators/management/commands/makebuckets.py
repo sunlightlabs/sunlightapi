@@ -1,9 +1,6 @@
-import re
-from optparse import make_option
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
-from sunlightapi.api.models import NameMatchingBucket
-from sunlightapi.legislators.models import Legislator, LegislatorBucket
+from sunlightapi.legislators.models import Legislator, LegislatorBucket, NameMatchingBucket
 
 def create_buckets(person, bucket_type):
 
