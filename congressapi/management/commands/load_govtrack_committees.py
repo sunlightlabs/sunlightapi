@@ -29,7 +29,10 @@ class Command(BaseCommand):
                                                parent=None,
                                                name=com.get('displayname').strip())
             for m in com.xpath('member/@id'):
-                com_obj.members.add(legislators[m])
+                if m in legislators:
+                    com_obj.members.add(legislators[m])
+                else:
+                    print 'missing member: %s' % m
 
             for sc in com.xpath('subcommittee'):
                 sc_obj = Committee.objects.create(id='%s_%s' % (com_id, sc.get('code')),
@@ -37,4 +40,7 @@ class Command(BaseCommand):
                                                   parent=com_obj,
                                                   name=sc.get('displayname').strip())
                 for m in sc.xpath('member/@id'):
-                    sc_obj.members.add(legislators[m])
+                    if m in legislators:
+                        sc_obj.members.add(legislators[m])
+                    else:
+                        print 'missing member: %s' % m
