@@ -34,7 +34,7 @@ class Command(BaseCommand):
             leg = all_legislators.get(bioguide)
             if leg:
                 ld = dict(leg.__dict__)
-                ld.pop('_state')
+                ld.pop('_state', None)
                 dictdiff(ld, line)
                 if save:
                     leg.__dict__.update(line)
