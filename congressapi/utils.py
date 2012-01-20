@@ -26,6 +26,7 @@ class APIError(Exception):
 
 def _query_boundary_server(**params):
     BOUNDARY_SERVER_URL = 'http://pentagon.sunlightlabs.net/1.0/boundary/?'
+    params['shape_type'] = 'none'
     url = BOUNDARY_SERVER_URL + urllib.urlencode(params)
     data = urllib.urlopen(url)
     result = json.load(data)
