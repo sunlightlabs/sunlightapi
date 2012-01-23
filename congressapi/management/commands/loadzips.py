@@ -3,6 +3,7 @@ from congressapi.models import ZipDistrict
 
 import urllib
 import json
+import time
 
 class Command(BaseCommand):
     help = "update zip-district matching from boundaryservice"
@@ -35,3 +36,4 @@ class Command(BaseCommand):
             for obj in result:
                 ZipDistrict.objects.create(zipcode=zipcode, state=obj['district']['state'],
                                            district=obj['district']['number'])
+                time.sleep(0.5)
