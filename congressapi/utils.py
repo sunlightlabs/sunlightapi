@@ -15,7 +15,6 @@ from jellyfish import jaro_winkler
 from congressapi.models import NameMatchingBucket, LogEntry
 from locksmith.auth.models import ApiKey
 
-_api_urls = get_resolver(None).url_patterns
 
 FORMAT_STR = '(?P<format>(\.(xml|json))?)$'
 
@@ -114,6 +113,7 @@ def apimethod(method_name):
         Turns request.GET into params and converts return value of func from
         a python object to JSON or XML according to format parameter.
     """
+    _api_urls = get_resolver(None).url_patterns
 
     def decorator(func):
         def newfunc(request, *args, **kwargs):
