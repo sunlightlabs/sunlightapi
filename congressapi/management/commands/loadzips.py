@@ -2,7 +2,10 @@ from django.core.management.base import BaseCommand, make_option
 from congressapi.models import ZipDistrict
 
 import urllib
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
 import time
 
 class Command(BaseCommand):
