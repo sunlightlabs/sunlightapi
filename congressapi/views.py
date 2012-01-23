@@ -3,7 +3,7 @@ import string
 from django.utils.datastructures import SortedDict
 from congressapi.models import (Legislator, LegislatorBucket, Committee)
 from congressapi.utils import (apimethod, APIError, score_match,
-                               _district_from_latlong, _districts_from_zip)
+                               _district_from_latlong)
 
 RE_TITLES = re.compile(r'((Congress(wo)?man)|(Sen((ator)|\.)?)|(Rep((resentative)|(\.))?))\s+')
 RE_SUFFIX = re.compile(r'\b(Jr|Junior|Ii|Iii|Iv)\b')

@@ -16,6 +16,14 @@ class LogEntry(models.Model):
     class Meta:
         db_table = "api_logentry"
 
+class ZipDistrict(models.Model):
+    zipcode = models.CharField(max_length=5)
+    state = models.CharField(max_length=2)
+    district = models.CharField(max_length=2)
+
+    class Meta:
+        db_table = 'api_zipdistrict'
+
 
 # choices for party
 PARTIES = (

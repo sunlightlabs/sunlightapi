@@ -43,10 +43,6 @@ def _query_boundary_server(**params):
     return objs
 
 
-def _districts_from_zip(zip):
-    return _query_boundary_server(intersects='zcta-'+zip, sets='cd')
-
-
 def _district_from_latlong(params):
     lat = params['latitude']
     lng = params['longitude']
