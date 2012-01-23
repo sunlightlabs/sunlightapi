@@ -13,8 +13,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         from congressapi.utils import _query_boundary_server
-        # clear the list
-        ZipDistrict.objects.all().delete()
+        #clear the list
+        #ZipDistrict.objects.all().delete()
 
         print 'fetching list of ZCTAs...'
         url = 'http://pentagon.sunlightlabs.net/1.0/boundary-set/zcta/'
@@ -25,13 +25,18 @@ class Command(BaseCommand):
         n = 0
 
         for boundary in data['boundaries']:
-            # crude progress meter
-            n += 1
-            if n % 1000 == 0:
-                print '%d%% complete..' % (float(n)/len(data))*100
 
             # pull out zip
             zipcode = boundary[-6:-1]
+
+            if ZipDistrict.objects.filter(zipcode=zipcode).count():
+                continue
+
+            # crude progress meter
+            n += 1
+            if n % 1000 == 0:
+                print '%d%% complete..' % (float(n)/len(data['boundaries']))*100
+
             result = _query_boundary_server(intersects='zcta-'+zipcode,
                                             sets='cd')
             if len(result) == 0:
