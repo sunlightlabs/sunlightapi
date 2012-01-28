@@ -11,7 +11,7 @@ DATABASE_PORT = ''
 
 ADMIN_MEDIA_PREFIX = '/api/media/admin/'
 
-
+LOCKSMITH_STATS_APP = 'congressapi'
 TEMPLATE_DIRS = (
     '/home/api/lib/python/sunlightapi/templates/',
 )

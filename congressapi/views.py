@@ -209,7 +209,7 @@ def districts_from_zip(params):
     objs = []
 
     if ZIP_RE.match(params['zip']):
-        _districts_from_zip(params['zip'])
+        objs = _districts_from_zip(params['zip'])
 
     return {'districts': objs}
 
