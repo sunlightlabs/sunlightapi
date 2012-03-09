@@ -159,7 +159,7 @@ def _com_to_dict(com):
     """ convert committee into a suitable dict for output """
     od = SortedDict(_fdict(com.__dict__))
     od.pop('parent_id')
-    if '_state' in d:
+    if '_state' in od:
         od.pop('_state')
     return od
 
