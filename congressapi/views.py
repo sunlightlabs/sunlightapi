@@ -159,6 +159,8 @@ def _com_to_dict(com):
     """ convert committee into a suitable dict for output """
     od = SortedDict(_fdict(com.__dict__))
     od.pop('parent_id')
+    if '_state' in d:
+        od.pop('_state')
     return od
 
 def _chain_subcommittees(committee_list):
