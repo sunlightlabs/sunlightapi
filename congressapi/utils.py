@@ -102,7 +102,7 @@ def make_serializable(obj):
     if isinstance(obj, date):
         return str(obj)
     else:
-        raise TypeError
+        raise TypeError("invalid type: %s [%s]" % (obj, type(obj)))
 
 def apimethod(method_name):
     """ Decorator to do the repeat work of all api methods.
