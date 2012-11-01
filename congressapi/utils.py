@@ -39,6 +39,7 @@ def _query_boundary_server(**params):
             state, number = zobj['name'].split(' Congressional District ')
         else:
             state, number = zobj['name'].split(' ', 1)
+            number = number.lstrip('0')
 
         objs.append({'district': {'state': state, 'number': number}})
     return objs
