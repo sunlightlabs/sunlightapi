@@ -44,6 +44,10 @@ def _query_boundary_server(**params):
 def _district_from_latlong(params):
     lat = params['latitude']
     lng = params['longitude']
+    if params['districts'] == '2012':
+        sets = 'cd2012'
+    else:
+        sets = 'cd'
 
     try:
         flat, flng = float(lat), float(lng)
@@ -54,7 +58,7 @@ def _district_from_latlong(params):
         flng = -flng
 
     districts = _query_boundary_server(contains='%s,%s' % (flat, flng),
-                                       sets='cd')
+                                       sets=sets)
 
     if len(districts) == 0:
         raise APIError('Point not within a congressional district.')
