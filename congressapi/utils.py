@@ -35,8 +35,10 @@ def _query_boundary_server(**params):
         if '(at Large)' in zobj['name']:
             state = zobj['name'][0:2]
             number = '0'
-        else:
+        elif 'Congressional District' in zobj['name']:
             state, number = zobj['name'].split(' Congressional District ')
+        else:
+            state, number = zobj['name'].split(' ', 1)
 
         objs.append({'district': {'state': state, 'number': number}})
     return objs
