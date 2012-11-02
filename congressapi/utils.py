@@ -48,7 +48,7 @@ def _query_boundary_server(**params):
 def _district_from_latlong(params):
     lat = params['latitude']
     lng = params['longitude']
-    if params['districts'] == '2012':
+    if params.get('districts') == '2012':
         sets = 'cd2012'
     else:
         sets = 'cd'
