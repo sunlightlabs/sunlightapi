@@ -34,8 +34,12 @@ def _query_boundary_server(**params):
         if '(at Large)' in zobj['name']:
             state = zobj['name'][0:2]
             number = '0'
+        elif 'Congressional District' in zobj['name']:
+            state, number = zobj['name'].split(' Congressional District ')
         else:
-            state, number = zobj['name'].split(' ')
+            state, number = zobj['name'].split(' ', 1)
+            if number.startswith('0'):
+                number = number[1:]
 
         objs.append({'district': {'state': state, 'number': number}})
     return objs
@@ -43,6 +47,10 @@ def _query_boundary_server(**params):
 def _district_from_latlong(params):
     lat = params['latitude']
     lng = params['longitude']
+    if params.get('districts') == '2012':
+        sets = 'cd2012'
+    else:
+        sets = 'cd'
 
     try:
         flat, flng = float(lat), float(lng)
@@ -53,7 +61,7 @@ def _district_from_latlong(params):
         flng = -flng
 
     districts = _query_boundary_server(contains='%s,%s' % (flat, flng),
-                                       sets='cd')
+                                       sets=sets)
 
     if len(districts) == 0:
         raise APIError('Point not within a congressional district.')
