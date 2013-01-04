@@ -24,8 +24,7 @@ class APIError(Exception):
 
 
 def _query_boundary_server(**params):
-    BOUNDARY_SERVER_URL = 'http://pentagon.sunlightlabs.net/1.0/boundary/?'
-    params['shape_type'] = 'none'
+    BOUNDARY_SERVER_URL = 'http://ec2-184-73-61-66.compute-1.amazonaws.com/boundaries/cd/?'
     url = BOUNDARY_SERVER_URL + urllib.urlencode(params)
     data = urllib.urlopen(url)
     result = json.load(data)
@@ -48,10 +47,6 @@ def _query_boundary_server(**params):
 def _district_from_latlong(params):
     lat = params['latitude']
     lng = params['longitude']
-    if params.get('districts') == '2012':
-        sets = 'cd2012'
-    else:
-        sets = 'cd'
 
     try:
         flat, flng = float(lat), float(lng)
@@ -61,8 +56,7 @@ def _district_from_latlong(params):
     if flng > 0:
         flng = -flng
 
-    districts = _query_boundary_server(contains='%s,%s' % (flat, flng),
-                                       sets=sets)
+    districts = _query_boundary_server(contains='%s,%s' % (flat, flng))
 
     if len(districts) == 0:
         raise APIError('Point not within a congressional district.')
@@ -142,10 +136,11 @@ def apimethod(method_name):
                         params[str(key)+'__in'] = val
 
             # do authorization
-            try:
-                apiuser = ApiKey.objects.get(key=apikey, status='A')
-            except ObjectDoesNotExist:
-                return HttpResponseForbidden('Invalid API Key')
+            if not settings.DEBUG:
+                try:
+                    apiuser = ApiKey.objects.get(key=apikey, status='A')
+                except ObjectDoesNotExist:
+                    return HttpResponseForbidden('Invalid API Key')
 
             # call the actual api function
             error = None
@@ -163,12 +158,13 @@ def apimethod(method_name):
                 error = e.message
 
             # log this call to the database
-            LogEntry.objects.create(method = method_name,
-                                    error = bool(error),
-                                    output = format,
-                                    caller_key = apiuser,
-                                    caller_ip = request.META['REMOTE_ADDR'],
-                                    query_string = request.META['QUERY_STRING'])
+            if not settings.DEBUG:
+                LogEntry.objects.create(method = method_name,
+                                        error = bool(error),
+                                        output = format,
+                                        caller_key = apiuser,
+                                        caller_ip = request.META['REMOTE_ADDR'],
+                                        query_string = request.META['QUERY_STRING'])
 
             if not error:
                 # replace obj with obj['xml'] or obj['json'] if they exist
