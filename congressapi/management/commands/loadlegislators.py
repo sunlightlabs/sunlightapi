@@ -32,7 +32,7 @@ class Command(BaseCommand):
             if line['birthdate']:
                 line['birthdate'] = datetime.strptime(line['birthdate'], '%Y-%m-%d').date()
             else:
-                line['birthdate'] = datetime.datetime(1970, 1, 1)
+                line['birthdate'] = datetime(1970, 1, 1)
             bioguide = line['bioguide_id']
             leg = all_legislators.get(bioguide)
             if leg:
