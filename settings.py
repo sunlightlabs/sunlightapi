@@ -13,18 +13,16 @@ if DEBUG:
 else:
     CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 
-ADMINS = (
-    ('James Turk', 'jturk@sunlightfoundation.com'),
-)
+ADMINS = ()
 MANAGERS = ADMINS
 EMAIL_SUBJECT_PREFIX = '[Sunlight API] '
 
-EMAIL_HOST = 'smtp.sunlightlabs.com'
+EMAIL_HOST = ''
 EMAIL_PORT = 25
-EMAIL_HOST_USER = '***REMOVED***'
-EMAIL_HOST_PASSWORD = '***REMOVED***'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL='api@sunlightlabs.com'
+DEFAULT_FROM_EMAIL=''
 
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
@@ -47,7 +45,7 @@ MEDIA_URL = ''
 ADMIN_MEDIA_PREFIX = '/media/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '***REMOVED***'
+SECRET_KEY = ''
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -81,9 +79,9 @@ INSTALLED_APPS = (
     'locksmith.auth',
 )
 
-LOCKSMITH_HUB_URL = 'http://services.sunlightlabs.com/analytics/'
-LOCKSMITH_SIGNING_KEY = '***REMOVED***'
-LOCKSMITH_API_NAME = 'sunlightapi'
+LOCKSMITH_HUB_URL = ''
+LOCKSMITH_SIGNING_KEY = ''
+LOCKSMITH_API_NAME = ''
 
 try:
     from local_settings import *
